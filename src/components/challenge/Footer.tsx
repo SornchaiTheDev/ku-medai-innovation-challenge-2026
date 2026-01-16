@@ -2,6 +2,7 @@ import { Mail, Phone } from 'lucide-react'
 import { challengeConstants } from '@/data/challenge-constants'
 import AnimatedContent from '@/components/AnimatedContent'
 import FadeContent from '@/components/FadeContent'
+import StarBorder from '@/components/StarBorder'
 
 export default function Footer() {
   return (
@@ -55,10 +56,18 @@ export default function Footer() {
 
         <FadeContent duration={800} delay={500}>
           <div className="border-t border-slate-800 pt-8 text-center">
-            <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-8 py-3 rounded-full font-semibold transition-all hover:scale-105 shadow-lg shadow-emerald-500/25 mb-4">
+            <StarBorder
+              as="button"
+              color="#50d8af"
+              speed="4s"
+              thickness={2}
+              variant="emerald"
+              className="font-semibold"
+              onClick={() => alert('Registration coming soon!')}
+            >
               Register Now
-            </button>
-            <p className="text-slate-500 text-sm">
+            </StarBorder>
+            <p className="text-slate-500 text-sm mt-4">
               © 2026 {challengeConstants.name}. All rights reserved.
             </p>
           </div>

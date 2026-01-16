@@ -4,6 +4,7 @@ import { challengeConstants } from '@/data/challenge-constants'
 import AnimatedContent from '@/components/AnimatedContent'
 import BlurText from '@/components/BlurText'
 import FadeContent from '@/components/FadeContent'
+import StarBorder from '@/components/StarBorder'
 import TextType from '@/components/TextType'
 
 interface TimeLeft {
@@ -139,9 +140,17 @@ export default function Hero() {
           delay={900}
           ease="back.out(1.2)"
         >
-          <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25">
+          <StarBorder
+            as="button"
+            color="#50d8af"
+            speed="4s"
+            thickness={2}
+            variant="emerald"
+            className="font-semibold text-lg"
+            onClick={() => alert('Registration coming soon!')}
+          >
             Join the Challenge
-          </button>
+          </StarBorder>
         </AnimatedContent>
       </div>
 
