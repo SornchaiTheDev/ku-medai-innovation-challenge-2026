@@ -3,6 +3,7 @@ import { useState } from 'react'
 import {
   Activity,
   BarChart,
+  ChevronDown,
   Eye,
   Facebook,
   Heart,
@@ -18,6 +19,7 @@ import {
   Twitter,
   X,
 } from 'lucide-react'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/')({
@@ -462,23 +464,29 @@ function Portfolio() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {websiteData.sections.portfolio.projects.map((project, index) => (
-            <div
-              key={index}
-              className="bg-slate-100 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-            >
-              <div className="aspect-video bg-slate-200">
+            <Dialog key={index}>
+              <DialogTrigger asChild>
+                <div className="group relative overflow-hidden rounded-lg cursor-pointer">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-auto object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                    <h3 className="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {project.title}
+                    </h3>
+                  </div>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[90vw] w-fit sm:max-h-[90vh] p-0 bg-transparent border-0">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
                 />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-slate-800 text-center">
-                  {project.title}
-                </h3>
-              </div>
-            </div>
+              </DialogContent>
+            </Dialog>
           ))}
         </div>
       </div>
