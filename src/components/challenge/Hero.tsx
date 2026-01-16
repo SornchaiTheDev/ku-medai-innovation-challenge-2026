@@ -69,7 +69,7 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
   ]
 
   return (
-    <div className="flex justify-center gap-4 mb-8">
+    <div className="flex justify-center gap-4 mb-12">
       {timeUnits.map((unit) => (
         <div key={unit.label} className="text-center">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 min-w-[70px] border border-white/20">
@@ -94,7 +94,7 @@ export default function Hero() {
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
         <FadeContent duration={800} delay={300}>
-          <div className="hidden md:inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-8 border border-white/20">
+          <div className="hidden md:inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-10 border border-white/20">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-emerald-400" />
               <span className="text-sm text-white/90">
@@ -109,12 +109,12 @@ export default function Hero() {
             </div>
           </div>
         </FadeContent>
-        <h1 className="text-3xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
+
+        <div className="text-3xl md:text-6xl font-bold text-white mb-8 md:mb-10 tracking-tight space-y-4">
           <TextType
             text={challengeConstants.headline}
             typingSpeed={60}
             pauseDuration={3000}
-            className="inline"
           />
           <br />
           <BlurText
@@ -124,34 +124,36 @@ export default function Hero() {
             animateBy="words"
             stepDuration={0.4}
           />
-        </h1>
+        </div>
 
         <FadeContent duration={800} delay={600}>
-          <p className="text-base md:text-xl text-slate-300 max-w-3xl mx-auto mb-6">
+          <p className="text-base md:text-xl text-slate-300 max-w-3xl mx-auto mb-10">
             {challengeConstants.subheadline}
           </p>
         </FadeContent>
 
         <CountdownTimer targetDate="January 26, 2026" />
 
-        <AnimatedContent
-          distance={30}
-          duration={0.6}
-          delay={900}
-          ease="back.out(1.2)"
-        >
-          <StarBorder
-            as="button"
-            color="#50d8af"
-            speed="4s"
-            thickness={2}
-            variant="emerald"
-            className="font-semibold text-lg"
-            onClick={() => alert('Registration coming soon!')}
+        <div className="mt-8">
+          <AnimatedContent
+            distance={30}
+            duration={0.6}
+            delay={900}
+            ease="back.out(1.2)"
           >
-            Join the Challenge
-          </StarBorder>
-        </AnimatedContent>
+            <StarBorder
+              as="button"
+              color="#50d8af"
+              speed="4s"
+              thickness={2}
+              variant="emerald"
+              className="font-semibold text-lg"
+              onClick={() => alert('Registration coming soon!')}
+            >
+              Join the Challenge
+            </StarBorder>
+          </AnimatedContent>
+        </div>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-slate-900 via-slate-900/85 to-transparent" />
