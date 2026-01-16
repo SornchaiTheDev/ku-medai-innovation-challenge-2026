@@ -161,6 +161,11 @@ code {
 @layer base {
   html {
     scroll-behavior: smooth;
+    background-color: #0f172a;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   * {
@@ -169,5 +174,10 @@ code {
 
   body {
     @apply bg-background text-foreground;
+    background-color: #0f172a;
+    min-height: 100vh;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
