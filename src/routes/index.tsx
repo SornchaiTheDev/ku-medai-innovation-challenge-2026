@@ -1,9 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Activity,
   BarChart,
-  ChevronDown,
   Eye,
   Facebook,
   Heart,
@@ -25,6 +24,67 @@ import { cn } from '@/lib/utils'
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
+
+function useScrollAnimation(threshold = 0.1) {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(entry.target)
+        }
+      },
+      { threshold },
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [threshold])
+
+  return { ref, isVisible }
+}
+
+function AnimatedSection({
+  children,
+  className,
+  animation = 'fade-up',
+}: {
+  children: React.ReactNode
+  className?: string
+  animation?: 'fade-up' | 'fade-left' | 'fade-right' | 'scale'
+}) {
+  const { ref, isVisible } = useScrollAnimation(0.1)
+
+  const animations = {
+    'fade-up': 'animate-fade-up',
+    'fade-left': 'animate-fade-left',
+    'fade-right': 'animate-fade-right',
+    scale: 'animate-scale',
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        'transition-all duration-700 ease-out',
+        isVisible ? animations[animation] : 'opacity-0 translate-y-8',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  )
+}
 
 const websiteData = {
   title: 'AIIH',
@@ -381,25 +441,31 @@ function About() {
   return (
     <section id="about" className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <AnimatedSection className="text-center mb-16">
           <h2 className="text-3xl font-bold text-slate-800 mb-4">
             {websiteData.sections.about.title}
           </h2>
           <div className="w-20 h-1 bg-aiih-secondary mx-auto"></div>
-        </div>
+        </AnimatedSection>
         <div className="grid md:grid-cols-2 gap-12 md:items-start items-center">
-          <div className="flex justify-center">
+          <AnimatedSection
+            animation="fade-right"
+            className="flex justify-center"
+          >
             <img
               src={websiteData.sections.about.image}
               alt="About AIIH"
               className="h-auto max-h-[500px]"
             />
-          </div>
-          <div className="space-y-6 text-slate-600 leading-relaxed text-center md:text-left">
+          </AnimatedSection>
+          <AnimatedSection
+            animation="fade-left"
+            className="space-y-6 text-slate-600 leading-relaxed text-center md:text-left"
+          >
             {websiteData.sections.about.content.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
-          </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>
@@ -414,7 +480,7 @@ function Services() {
   return (
     <section id="services" className="py-20 bg-slate-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <AnimatedSection className="text-center mb-12">
           <h2 className="text-3xl font-bold text-slate-800 mb-4">
             {websiteData.sections.services.title}
           </h2>
@@ -422,14 +488,15 @@ function Services() {
             {websiteData.sections.services.description}
           </p>
           <div className="w-20 h-1 bg-aiih-secondary mx-auto"></div>
-        </div>
+        </AnimatedSection>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {websiteData.sections.services.expertise.map((item, index) => {
             const Icon = getIcon(item.icon)
             return (
-              <div
+              <AnimatedSection
                 key={index}
-                className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                animation="scale"
+                className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-14 h-14 bg-aiih-secondary/20 rounded-full flex items-center justify-center mb-4">
                   <Icon size={28} className="text-aiih-primary" />
@@ -440,7 +507,7 @@ function Services() {
                 {item.description && (
                   <p className="text-slate-600">{item.description}</p>
                 )}
-              </div>
+              </AnimatedSection>
             )
           })}
         </div>
@@ -453,7 +520,7 @@ function Portfolio() {
   return (
     <section id="portfolio" className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <AnimatedSection className="text-center mb-12">
           <h2 className="text-3xl font-bold text-slate-800 mb-4">
             {websiteData.sections.portfolio.title}
           </h2>
@@ -461,32 +528,34 @@ function Portfolio() {
             {websiteData.sections.portfolio.description}
           </p>
           <div className="w-20 h-1 bg-aiih-secondary mx-auto"></div>
-        </div>
+        </AnimatedSection>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {websiteData.sections.portfolio.projects.map((project, index) => (
-            <Dialog key={index}>
-              <DialogTrigger asChild>
-                <div className="group relative overflow-hidden rounded-lg cursor-pointer">
+            <AnimatedSection key={index} animation="scale">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <div className="group relative overflow-hidden rounded-lg cursor-pointer">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-auto object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
+                      <h3 className="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {project.title}
+                      </h3>
+                    </div>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[90vw] w-fit sm:max-h-[90vh] p-0 bg-transparent border-0">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-auto object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
-                    <h3 className="text-white text-lg font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {project.title}
-                    </h3>
-                  </div>
-                </div>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[90vw] w-fit sm:max-h-[90vh] p-0 bg-transparent border-0">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                />
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </AnimatedSection>
           ))}
         </div>
       </div>
@@ -546,17 +615,18 @@ function Team() {
   return (
     <section id="team" className="py-20 bg-slate-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <AnimatedSection className="text-center mb-12">
           <h2 className="text-3xl font-bold text-slate-800 mb-4">
             {websiteData.sections.team.title}
           </h2>
           <div className="w-20 h-1 bg-aiih-secondary mx-auto"></div>
-        </div>
+        </AnimatedSection>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {websiteData.sections.team.members.map((member, index) => (
-            <div
+            <AnimatedSection
               key={index}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+              animation="fade-up"
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               <div className="aspect-square bg-slate-200">
                 <img
@@ -584,7 +654,7 @@ function Team() {
                   })}
                 </div>
               </div>
-            </div>
+            </AnimatedSection>
           ))}
         </div>
       </div>
@@ -596,7 +666,7 @@ function Contact() {
   return (
     <section id="contact" className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <AnimatedSection className="text-center mb-12">
           <h2 className="text-3xl font-bold text-slate-800 mb-4">
             {websiteData.sections.contact.title}
           </h2>
@@ -604,9 +674,9 @@ function Contact() {
             {websiteData.sections.contact.description}
           </p>
           <div className="w-20 h-1 bg-aiih-secondary mx-auto"></div>
-        </div>
+        </AnimatedSection>
         <div className="grid md:grid-cols-2 gap-12">
-          <div className="space-y-6">
+          <AnimatedSection animation="fade-left" className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 bg-aiih-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
                 <MapPin size={20} className="text-aiih-primary" />
@@ -652,8 +722,8 @@ function Contact() {
                 />
               </div>
             </div>
-          </div>
-          <div>
+          </AnimatedSection>
+          <AnimatedSection animation="fade-right">
             <form className="space-y-4">
               {websiteData.sections.contact.form.fields.map((field) => (
                 <div key={field.name}>
@@ -682,7 +752,7 @@ function Contact() {
                 {websiteData.sections.contact.form.submitButton}
               </button>
             </form>
-          </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>
