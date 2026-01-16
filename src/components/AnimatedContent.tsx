@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -46,10 +46,11 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
   ...props
 }) => {
   const ref = useRef<HTMLDivElement>(null)
+  const [hasAnimated, setHasAnimated] = useState(false)
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || hasAnimated) return
 
     let scrollerTarget: Element | string | null =
       container || document.getElementById('snap-main-container') || null
@@ -61,26 +62,27 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
     const axis = direction === 'horizontal' ? 'x' : 'y'
     const offset = reverse ? -distance : distance
     const startPct = (1 - threshold) * 100
+    const getSeconds = (val: number) => (val > 10 ? val / 1000 : val)
 
     gsap.set(el, {
       [axis]: offset,
       scale,
       opacity: animateOpacity ? initialOpacity : 1,
-      visibility: 'visible',
     })
 
     const tl = gsap.timeline({
       paused: true,
-      delay,
+      delay: getSeconds(delay),
       onComplete: () => {
+        setHasAnimated(true)
         if (onComplete) onComplete()
         if (disappearAfter > 0) {
           gsap.to(el, {
             [axis]: reverse ? distance : -distance,
             scale: 0.8,
             opacity: animateOpacity ? initialOpacity : 0,
-            delay: disappearAfter,
-            duration: disappearDuration,
+            delay: getSeconds(disappearAfter),
+            duration: getSeconds(disappearDuration),
             ease: disappearEase,
             onComplete: () => onDisappearanceComplete?.(),
           })
@@ -92,7 +94,7 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
       [axis]: 0,
       scale: 1,
       opacity: 1,
-      duration,
+      duration: getSeconds(duration),
       ease,
     })
 
@@ -103,6 +105,10 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
       once: true,
       onEnter: () => tl.play(),
     })
+
+    if (st.isActive) {
+      tl.play()
+    }
 
     return () => {
       st.kill()
@@ -125,10 +131,11 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
     disappearEase,
     onComplete,
     onDisappearanceComplete,
+    hasAnimated,
   ])
 
   return (
-    <div ref={ref} className={`invisible ${className}`} {...props}>
+    <div ref={ref} className={className} {...props}>
       {children}
     </div>
   )
