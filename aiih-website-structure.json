@@ -1,0 +1,217 @@
+{
+  "title": "AIIH",
+  "meta": {
+    "description": "",
+    "keywords": "",
+    "viewport": "width=device-width, initial-scale=1.0"
+  },
+  "theme": {
+    "name": "Reveal",
+    "author": "BootstrapMade"
+  },
+  "topBar": {
+    "contactInfo": {
+      "email": "aiih.sci@ku.th",
+      "phone": "+66 2-562-5444"
+    },
+    "socialLinks": [
+      "twitter",
+      "facebook",
+      "instagram",
+      "google-plus",
+      "linkedin"
+    ]
+  },
+  "header": {
+    "logo": {
+      "text": "AI<span>IH</span>",
+      "href": "#body"
+    },
+    "navigation": [
+      { "text": "Home", "href": "#body" },
+      { "text": "About Us", "href": "#about" },
+      { "text": "Why AIIH?", "href": "#services" },
+      { "text": "Projects", "href": "#portfolio" },
+      { "text": "Teams", "href": "#team" },
+      { "text": "Contact", "href": "#contact" },
+      { "text": "Login/Logout", "href": "#login" },
+      { "text": "Sign Up", "href": "#login" },
+      {
+        "text": "Research",
+        "href": "",
+        "children": [
+          { "text": "Post New Project", "href": "#" },
+          { "text": "Edit Project", "href": "#" }
+        ]
+      }
+    ]
+  },
+  "intro": {
+    "backgroundImages": [
+      "img/intro-carousel/1.png",
+      "img/intro-carousel/2.png",
+      "img/intro-carousel/3.png",
+      "img/intro-carousel/1.png",
+      "img/intro-carousel/2.png"
+    ]
+  },
+  "sections": {
+    "about": {
+      "title": "ความเป็นมาและความสำคัญ",
+      "content": [
+        "ยุทธศาสตร์ชาติ 20 ปี (พ.ศ. 2561 - 2580) ได้มุ่งเน้นส่งเสริมการวิจัยพัฒนาอุตสาหกรรมเทคโนโลยีดิจิทัลและปัญญาประดิษฐ์ (AI) ให้เป็นฐานในการขับเคลื่อนประเทศ โดยการนำเทคโนโลยีปัญญาประดิษฐ์มาสร้างนวัตกรรมเพื่อเพิ่มศักยภาพและความสามารถในการแข่งขันของประเทศทั้งในภาคการเกษตร ภาคอุตสาหกรรม และการแพทย์และสาธารณสุข ประกอบกับมหาวิทยาลัยเกษตรศาสตร์ วิทยาลัยแพทยศาสตร์พระมงกุฎเกล้า และโรงพยาบาลพระมงกุฎเกล้า ได้มีความร่วมมือทางวิชาการร่วมกันมายาวนาน ทั้งการเรียนการสอน หลักสูตร และงานวิจัย",
+        "คณะวิทยาศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ จึงมีแนวคิดจัดตั้ง“ศูนย์เทคโนโลยีและนวัตกรรมปัญญาประดิษฐ์เพื่อสุขภาพ (Artificial Intelligence Technology and Innovation Center for Health : AIIH)”ขึ้น โดยความร่วมมือกับวิทยาลัยแพทยศาสตร์พระมงกุฎเกล้าและโรงพยาบาลพระมงกุฎเกล้า เพื่อเป็นศูนย์ในการสร้างองค์ความรู้และพัฒนานวัตกรรมปัญญาประดิษฐ์ทางการแพทย์และสุขภาพ สามารถขับเคลื่อนนำผลงานวิจัยไปใช้ประโยชน์ในภาคอุตสาหกรรมและเชิงพาณิชย์ได้อย่างเป็นรูปธรรม เพิ่มศักยภาพการแข่งขันด้านเทคโนโลยีการแพทย์และสุขภาพของประเทศให้สูงขึ้น"
+      ],
+      "image": "img/about-img.jpg"
+    },
+    "services": {
+      "title": "ความเชี่ยวชาญของเรา",
+      "description": "AIIH ประกอบไปด้วยอาจารย์ แพทย์ และนักวิจัยที่มีความเชี่ยวชาญในหลายด้าน โดยสามารถแบ่งได้เป็น 5 หน่วยคือ",
+      "expertise": [
+        {
+          "icon": "fa-tachometer",
+          "title": "High Performance Computing for Healthcare"
+        },
+        {
+          "icon": "fa-eye",
+          "title": "Medical Diagnostic Imaging",
+          "description": "From medical images to healthcare practices"
+        },
+        {
+          "icon": "fa-pie-chart",
+          "title": "Data Science for Healthcare Informatics",
+          "description": "From data to healthcare practices"
+        },
+        {
+          "icon": "fa-language",
+          "title": "Natural Language Processing for Healthcare"
+        },
+        {
+          "icon": "fa-heartbeat",
+          "title": "AI-Assisted Healthcare"
+        }
+      ]
+    },
+    "portfolio": {
+      "title": "ตัวอย่างงานวิจัยที่ดำเนินการ",
+      "description": "ทางศูนย์เทคโนโลยีและนวัตกรรมปัญญาประดิษฐ์เพื่อสุขภาพได้มีการทำวิจัยในหลายด้าน อาธิ",
+      "projects": [
+        {
+          "image": "img/portfolio/aiih-poster.png",
+          "title": "Example Researches"
+        }
+      ]
+    },
+    "clients": {
+      "title": "ผู้ร่วมงานของเรา",
+      "partners": [
+        {
+          "name": "Phramongkutklao College of Medicine",
+          "logo": "img/clients/client-1.png"
+        },
+        {
+          "name": "Kasetsart University",
+          "logo": "img/clients/client-2.png"
+        }
+      ]
+    },
+    "callToAction": {
+      "title": "สนใจทำงานกับเรา",
+      "description": "เพียงแค่สมัครสมาชิกคุณก็จะเป็นส่วนหนึ่งในการสร้างนวัตกรรมใหม่ๆ",
+      "buttonText": "สมัครเลย"
+    },
+    "team": {
+      "title": "รู้จักกับทีมของ AIIH",
+      "members": [
+        {
+          "name": "Asst.Prof. Pakaket Wattuya, Ph.D.",
+          "image": "img/team-1.jpg",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        },
+        {
+          "name": "Asst.Prof. Chakrit Watcharopas, Ph.D.",
+          "image": "img/team-2.jpg",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        },
+        {
+          "name": "Thammakorn Saethang, Ph.D.",
+          "image": "img/team-3.jpg",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        },
+        {
+          "name": "Nopadon Juneam, Ph.D.",
+          "image": "img/team-4.jpeg",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        },
+        {
+          "name": "Soontharee Koompairojn, Ph.D.",
+          "image": "img/team-5.jpeg",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        },
+        {
+          "name": "Asst.Prof. Aurawan Imsombut, Ph.D.",
+          "image": "img/team-6.jpg",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        },
+        {
+          "name": "Pisut Wisessing, Ph.D.",
+          "image": "img/team-7.png",
+          "social": ["twitter", "facebook", "google-plus", "linkedin"]
+        }
+      ]
+    },
+    "contact": {
+      "title": "ติดต่อ AIIH",
+      "description": "Department of Computer Science, Faculty of Science, Kasetsart University (BangKhen Campus)",
+      "address": {
+        "icon": "ion-ios-location-outline",
+        "text": "SC45 7th floor and 8th floor 50, Ngamwongwan Rd., Khwaeng Lat Yao, Khet Chatuchak, Bangkok 10900"
+      },
+      "phone": {
+        "icon": "ion-ios-telephone-outline",
+        "text": "02-562-5555 ext. 647209, 647210"
+      },
+      "email": {
+        "icon": "ion-ios-email-outline",
+        "text": "aiih.sci@ku.th"
+      },
+      "map": {
+        "src": "https://maps.google.com/?q=13.845790075224441,100.57133925459024&output=svembed"
+      },
+      "form": {
+        "fields": [
+          {
+            "name": "name",
+            "type": "text",
+            "placeholder": "Your Name",
+            "rule": "minlen:4"
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "placeholder": "Your Email",
+            "rule": "email"
+          },
+          {
+            "name": "subject",
+            "type": "text",
+            "placeholder": "Subject",
+            "rule": "minlen:4"
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "placeholder": "Message",
+            "rows": 5,
+            "rule": "required"
+          }
+        ],
+        "submitButton": "Send Message"
+      }
+    }
+  },
+  "footer": {
+    "copyright": "Reveal. All Rights Reserved",
+    "designedBy": "BootstrapMade"
+  }
+}
