@@ -88,23 +88,27 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-8 border border-white/20">
-          <Calendar className="w-4 h-4 text-emerald-400" />
-          <span className="text-sm text-white/90">
-            📅 Registration Opens: {challengeConstants.dates.registrationOpen}
-          </span>
-          <span className="text-white/40">|</span>
-          <span className="text-sm text-white/90">
-            🏆 Final Pitch: {challengeConstants.dates.finalPitch}
-          </span>
+        <div className="hidden md:inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-8 border border-white/20">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm text-white/90">
+              📅 {challengeConstants.dates.registrationOpen}
+            </span>
+          </div>
+          <span className="hidden md:block text-white/40">|</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-white/90">
+              🏆 {challengeConstants.dates.finalPitch}
+            </span>
+          </div>
         </div>
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+        <h1 className="text-3xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
           {challengeConstants.headline}
           <br />
           <span className="text-emerald-400">{challengeConstants.name}</span>
         </h1>
 
-        <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-6">
+        <p className="text-base md:text-xl text-slate-300 max-w-3xl mx-auto mb-6">
           {challengeConstants.subheadline}
         </p>
 
