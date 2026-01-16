@@ -38,7 +38,7 @@ export default function About() {
           </div>
         </FadeContent>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {challengeConstants.benefits.map((benefit, index) => (
             <AnimatedContent
               key={index}
@@ -47,7 +47,7 @@ export default function About() {
               delay={400 + index * 100}
               ease="power2.out"
             >
-              <div className="p-6 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10 transition-all group">
+              <div className="p-6 rounded-xl bg-slate-800 border border-slate-700 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10 transition-all group h-full flex flex-col">
                 <div className="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-500 transition-colors">
                   <benefit.icon className="w-6 h-6 text-emerald-400 group-hover:text-white transition-colors" />
                 </div>
