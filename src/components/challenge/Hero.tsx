@@ -1,6 +1,10 @@
 import { Calendar } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { challengeConstants } from '@/data/challenge-constants'
+import AnimatedContent from '@/components/AnimatedContent'
+import BlurText from '@/components/BlurText'
+import FadeContent from '@/components/FadeContent'
+import TextType from '@/components/TextType'
 
 interface TimeLeft {
   days: number
@@ -88,37 +92,57 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-        <div className="hidden md:inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-8 border border-white/20">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm text-white/90">
-              📅 {challengeConstants.dates.registrationOpen}
-            </span>
+        <FadeContent duration={800} delay={300}>
+          <div className="hidden md:inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-8 border border-white/20">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-emerald-400" />
+              <span className="text-sm text-white/90">
+                📅 {challengeConstants.dates.registrationOpen}
+              </span>
+            </div>
+            <span className="hidden md:block text-white/40">|</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-white/90">
+                🏆 {challengeConstants.dates.finalPitch}
+              </span>
+            </div>
           </div>
-          <span className="hidden md:block text-white/40">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-white/90">
-              🏆 {challengeConstants.dates.finalPitch}
-            </span>
-          </div>
-        </div>
+        </FadeContent>
         <h1 className="text-3xl md:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
-          {challengeConstants.headline}
+          <TextType
+            text={challengeConstants.headline}
+            typingSpeed={60}
+            pauseDuration={3000}
+            className="inline"
+          />
           <br />
-          <span className="text-emerald-400">{challengeConstants.name}</span>
+          <BlurText
+            text={challengeConstants.name}
+            className="text-emerald-400 inline"
+            delay={100}
+            animateBy="words"
+            stepDuration={0.4}
+          />
         </h1>
 
-        <p className="text-base md:text-xl text-slate-300 max-w-3xl mx-auto mb-6">
-          {challengeConstants.subheadline}
-        </p>
+        <FadeContent duration={800} delay={600}>
+          <p className="text-base md:text-xl text-slate-300 max-w-3xl mx-auto mb-6">
+            {challengeConstants.subheadline}
+          </p>
+        </FadeContent>
 
         <CountdownTimer targetDate="January 26, 2026" />
 
-        <div>
+        <AnimatedContent
+          distance={30}
+          duration={0.6}
+          delay={900}
+          ease="back.out(1.2)"
+        >
           <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25">
             Join the Challenge
           </button>
-        </div>
+        </AnimatedContent>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-slate-900 via-slate-900/85 to-transparent" />
