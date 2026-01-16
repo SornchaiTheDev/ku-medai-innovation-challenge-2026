@@ -1,8 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Activity,
   BarChart,
+  ChevronLeft,
+  ChevronRight,
   Eye,
   Facebook,
   Heart,
@@ -18,7 +20,12 @@ import {
   Twitter,
   X,
 } from 'lucide-react'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/')({
@@ -92,10 +99,6 @@ const websiteData = {
     description: '',
     keywords: '',
     viewport: 'width=device-width, initial-scale=1.0',
-  },
-  theme: {
-    name: 'Reveal',
-    author: 'BootstrapMade',
   },
   topBar: {
     contactInfo: {
@@ -354,6 +357,36 @@ function TopBar() {
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('body')
+
+  useEffect(() => {
+    const sections = ['about', 'services', 'portfolio', 'team', 'contact']
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id)
+          }
+        })
+      },
+      { threshold: 0.3, rootMargin: '-10% 0px -50% 0px' },
+    )
+
+    sections.forEach((id) => {
+      const element = document.getElementById(id)
+      if (element) observer.observe(element)
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  const isActive = (href: string) => {
+    const hash = href.replace('#', '')
+    if (hash === 'body') {
+      return activeSection === 'body' || activeSection === ''
+    }
+    return activeSection === hash
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md">
@@ -361,19 +394,27 @@ function Header() {
         <div className="flex justify-between items-center h-16">
           <a
             href={websiteData.header.logo.href}
-            className="text-2xl font-bold text-slate-800"
+            className="text-2xl font-bold text-aiih-primary"
           >
-            {websiteData.header.logo.text}
+            AI<span className="text-aiih-secondary">IH</span>
           </a>
           <nav className="hidden md:flex items-center gap-6">
             {websiteData.header.navigation.map((item) => (
               <div key={item.text} className="relative group">
                 <a
                   href={item.href || '#'}
-                  className="flex items-center gap-1 text-slate-600 hover:text-aiih-primary transition-colors"
+                  className={cn(
+                    'flex items-center gap-1 transition-colors',
+                    isActive(item.href || '')
+                      ? 'text-aiih-primary font-semibold'
+                      : 'text-slate-600 hover:text-aiih-primary',
+                  )}
                 >
                   {item.text}
                 </a>
+                {isActive(item.href || '') && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-aiih-secondary" />
+                )}
               </div>
             ))}
           </nav>
@@ -385,51 +426,154 @@ function Header() {
           </button>
         </div>
       </div>
+      {isMenuOpen && (
+        <div className="md:hidden border-t">
+          <nav className="container mx-auto px-4 py-4 space-y-2">
+            {websiteData.header.navigation.map((item) => (
+              <a
+                key={item.text}
+                href={item.href || '#'}
+                className={cn(
+                  'block py-2 transition-colors',
+                  isActive(item.href || '')
+                    ? 'text-aiih-primary font-semibold'
+                    : 'text-slate-600 hover:text-aiih-primary',
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.text}
+              </a>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
 
 function Intro() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const currentSlideRef = useRef(currentSlide)
+  const isAnimatingRef = useRef(false)
+  const touchStartX = useRef<number | null>(null)
+
+  const backgroundImages = websiteData.intro.backgroundImages
+
+  useEffect(() => {
+    currentSlideRef.current = currentSlide
+  }, [currentSlide])
+
+  useEffect(() => {
+    isAnimatingRef.current = isAnimating
+  }, [isAnimating])
+
+  const goToSlide = useCallback((index: number) => {
+    if (index === currentSlideRef.current || isAnimatingRef.current) return
+    setIsAnimating(true)
+    setCurrentSlide(index)
+    setTimeout(() => setIsAnimating(false), 500)
+  }, [])
+
+  const goToPrev = useCallback(() => {
+    const newIndex =
+      currentSlideRef.current === 0
+        ? backgroundImages.length - 1
+        : currentSlideRef.current - 1
+    goToSlide(newIndex)
+  }, [backgroundImages.length, goToSlide])
+
+  const goToNext = useCallback(() => {
+    const newIndex =
+      currentSlideRef.current === backgroundImages.length - 1
+        ? 0
+        : currentSlideRef.current + 1
+    goToSlide(newIndex)
+  }, [backgroundImages.length, goToSlide])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }, [])
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (touchStartX.current === null) return
+      const touchEndX = e.touches[0].clientX
+      const diff = touchStartX.current - touchEndX
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          goToNext()
+        } else {
+          goToPrev()
+        }
+        touchStartX.current = null
+      }
+    },
+    [goToNext, goToPrev],
+  )
+
+  const handleTouchEnd = useCallback(() => {
+    touchStartX.current = null
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(goToNext, 5000)
+    return () => clearInterval(interval)
+  }, [goToNext])
 
   return (
     <section
       id="body"
-      className="relative h-[600px] bg-aiih-primary overflow-hidden"
+      className="relative h-[600px] overflow-hidden group"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="container mx-auto px-4 text-center text-white z-10">
-          <h1 className="text-5xl font-bold mb-6 animate-fade-in">
-            Artificial Intelligence Technology and Innovation Center for Health
-          </h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            AIIH - ศูนย์เทคโนโลยีและนวัตกรรมปัญญาประดิษฐ์เพื่อสุขภาพ
-          </p>
-          <div className="flex gap-4 justify-center">
-            <a
-              href="#about"
-              className="bg-aiih-secondary hover:bg-aiih-secondary/80 text-aiih-primary px-6 py-3 rounded-full transition-colors font-semibold"
-            >
-              เรียนรู้เพิ่มเติม
-            </a>
-            <a
-              href="#contact"
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-aiih-primary text-white px-6 py-3 rounded-full transition-colors"
-            >
-              ติดต่อเรา
-            </a>
+      <div className="absolute inset-0">
+        {backgroundImages.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out group ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${image})` }}
+            />
+            <div className="absolute inset-0 group-hover:bg-black/40 group-hover:transition-colors" />
           </div>
-        </div>
+        ))}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 pb-4">
-        {websiteData.intro.backgroundImages.map((_, index) => (
+
+      <button
+        onClick={goToPrev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 transition-all z-20 hidden md:block"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft size={32} className="text-white" />
+      </button>
+
+      <button
+        onClick={goToNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 transition-all z-20 hidden md:block"
+        aria-label="Next slide"
+      >
+        <ChevronRight size={32} className="text-white" />
+      </button>
+
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 z-20">
+        {backgroundImages.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentSlide(index)}
+            onClick={() => goToSlide(index)}
             className={cn(
-              'w-3 h-3 rounded-full transition-colors',
-              currentSlide === index ? 'bg-white' : 'bg-white/50',
+              'w-3 h-3 rounded-full transition-all',
+              currentSlide === index
+                ? 'bg-white scale-110'
+                : 'bg-white/50 hover:bg-white/70',
             )}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>
@@ -547,7 +691,8 @@ function Portfolio() {
                     </div>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[90vw] w-fit sm:max-h-[90vh] p-0 bg-transparent border-0">
+                <DialogContent className="sm:max-w-[90vw] sm:w-full md:w-fit sm:max-h-[90vh] p-0 bg-transparent border-0">
+                  <DialogTitle className="sr-only">{project.title}</DialogTitle>
                   <img
                     src={project.image}
                     alt={project.title}
