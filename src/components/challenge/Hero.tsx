@@ -88,6 +88,16 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
+        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-8 border border-white/20">
+          <Calendar className="w-4 h-4 text-emerald-400" />
+          <span className="text-sm text-white/90">
+            📅 Registration Opens: {challengeConstants.dates.registrationOpen}
+          </span>
+          <span className="text-white/40">|</span>
+          <span className="text-sm text-white/90">
+            🏆 Final Pitch: {challengeConstants.dates.finalPitch}
+          </span>
+        </div>
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
           {challengeConstants.headline}
           <br />
@@ -99,17 +109,6 @@ export default function Hero() {
         </p>
 
         <CountdownTimer targetDate="January 26, 2026" />
-
-        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-8 border border-white/20">
-          <Calendar className="w-4 h-4 text-emerald-400" />
-          <span className="text-sm text-white/90">
-            📅 Registration Opens: {challengeConstants.dates.registrationOpen}
-          </span>
-          <span className="text-white/40">|</span>
-          <span className="text-sm text-white/90">
-            🏆 Final Pitch: {challengeConstants.dates.finalPitch}
-          </span>
-        </div>
 
         <div>
           <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-8 py-4 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25">
