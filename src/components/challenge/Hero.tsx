@@ -115,6 +115,7 @@ export default function Hero() {
             text={challengeConstants.headline}
             typingSpeed={60}
             pauseDuration={3000}
+            className="text-lg md:text-6xl"
           />
           <br />
           <BlurText
