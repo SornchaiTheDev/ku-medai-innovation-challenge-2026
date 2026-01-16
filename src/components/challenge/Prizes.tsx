@@ -42,15 +42,6 @@ export default function Prizes() {
                           : 'bg-gradient-to-br from-slate-800 to-slate-800/50 border border-slate-700'
                   }`}
                 >
-                  {(index === 0 ||
-                    index === 1 ||
-                    index === 2 ||
-                    index >= 3) && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="text-3xl">{prize.badge}</span>
-                    </div>
-                  )}
-
                   <div className="mt-4 mb-3">
                     <span className="text-3xl">{prize.badge}</span>
                   </div>
