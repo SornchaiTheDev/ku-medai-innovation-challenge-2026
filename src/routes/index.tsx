@@ -6,10 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  Facebook,
   Heart,
-  Instagram,
-  Linkedin,
   Mail,
   MapPin,
   Menu,
@@ -17,7 +14,6 @@ import {
   Phone,
   Phone as PhoneIcon,
   Send,
-  Twitter,
   X,
 } from 'lucide-react'
 import {
@@ -208,39 +204,89 @@ const websiteData = {
       title: 'รู้จักกับทีมของ AIIH',
       members: [
         {
-          name: 'Asst.Prof. Pakaket Wattuya, Ph.D.',
-          image: 'img/team/team-1.jpg',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
-        },
-        {
           name: 'Asst.Prof. Chakrit Watcharopas, Ph.D.',
-          image: 'img/team/team-2.jpg',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
-        },
-        {
-          name: 'Thammakorn Saethang, Ph.D.',
-          image: 'img/team/team-3.jpg',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
-        },
-        {
-          name: 'Nopadon Juneam, Ph.D.',
-          image: 'img/team/team-4.jpeg',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
+          image: 'img/team/chakrit.jpg',
+          email: 'charkrit.w@ku.th',
+          expertise: ['Deep Learning', 'Computer Graphics'],
         },
         {
           name: 'Soontharee Koompairojn, Ph.D.',
-          image: 'img/team/team-5.jpeg',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
+          image: 'img/team/soontharee.jpeg',
+          email: 'fscisok@ku.ac.th',
+          expertise: ['Medical Image Analysis'],
+        },
+        {
+          name: 'Nuanwan Soonthornphisaj',
+          image: 'img/team/nuanwan.jpeg',
+          email: 'fscinws@ku.ac.th',
+          expertise: ['Artificial Intelligence', 'Machine Learning'],
+        },
+        {
+          name: 'Asst.Prof. Pakaket Wattuya, Ph.D.',
+          image: 'img/team/pakaket.jpg',
+          email: 'pakaket.w@ku.th',
+          expertise: ['Computer Vision', 'Medical Image Analysis', 'CNN'],
         },
         {
           name: 'Asst.Prof. Aurawan Imsombut, Ph.D.',
-          image: 'img/team/team-6.jpg',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
+          image: 'img/team/aurawan.jpg',
+          email: 'aurawan.i@ku.th',
+          expertise: ['Natural Language Processing', 'LLM'],
+        },
+        {
+          name: 'Nopadon Juneam, Ph.D.',
+          image: 'img/team/nopadon.jpeg',
+          email: 'nopadon.j@ku.ac.th',
+          expertise: [
+            'Computational Computer Science',
+            'Massive Data Analysis',
+          ],
+        },
+        {
+          name: 'Thammakorn Saethang, Ph.D.',
+          image: 'img/team/thammakorn.jpg',
+          email: 'thammakorn.s@ku.th',
+          expertise: ['Data Science', 'Bioinformatics'],
+        },
+        {
+          name: 'Tanaboon Tongbuasirilai',
+          image: 'img/team/tanaboon.jpeg',
+          email: 'tanaboon.to@ku.th',
+          expertise: ['Generative AI', 'Computer Graphics'],
+        },
+        {
+          name: 'Sarach Tuomchomtam',
+          image: 'img/team/sarach.jpeg',
+          email: 'sarach.t@ku.th',
+          expertise: [
+            'Applied AI',
+            'Machine Learning Systems',
+            'Generative AI',
+          ],
+        },
+        {
+          name: 'Pannapat Chanpaisaeng',
+          image: 'img/team/pannapat.jpeg',
+          email: 'pannapat.c@ku.th',
+          expertise: ['Human Computer Interaction', 'UX/UI'],
         },
         {
           name: 'Pisut Wisessing, Ph.D.',
-          image: 'img/team/team-7.png',
-          social: ['twitter', 'facebook', 'google-plus', 'linkedin'],
+          image: 'img/team/pisut.jpg',
+          email: 'pisut.wi@ku.th',
+          expertise: ['Computer Graphics'],
+        },
+        {
+          name: 'Sornchai Laksanapeeti',
+          image: 'img/team/sornchai.jpeg',
+          email: 'sornchai.la@ku.th',
+          expertise: ['Web Technology', 'Network Administrative'],
+        },
+        {
+          name: 'Suttipong Meuntaboot',
+          image: 'img/team/suttipong.jpeg',
+          email: 'suttipong.me@ku.th',
+          expertise: ['System Administrative', 'Network Administrative', 'IoT'],
         },
       ],
     },
@@ -302,10 +348,6 @@ const websiteData = {
 }
 
 const iconMap: Record<string, React.ElementType | undefined> = {
-  twitter: Twitter,
-  facebook: Facebook,
-  instagram: Instagram,
-  linkedin: Linkedin,
   'fa-tachometer': Activity,
   'fa-eye': Eye,
   'fa-pie-chart': BarChart,
@@ -363,13 +405,21 @@ function Header() {
     const sections = ['about', 'services', 'portfolio', 'team', 'contact']
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
+        const visibleSections = entries.filter((e) => e.isIntersecting)
+        if (visibleSections.length > 0) {
+          const active = visibleSections.reduce((prev, current) => {
+            const prevRect = entries.find(
+              (e) => e.target.id === prev.target.id,
+            )?.boundingClientRect
+            const currentRect = current.boundingClientRect
+            return Math.abs(prevRect!.top) < Math.abs(currentRect.top)
+              ? prev
+              : current
+          })
+          setActiveSection(active.target.id)
+        }
       },
-      { threshold: 0.3, rootMargin: '-10% 0px -50% 0px' },
+      { threshold: 0.3, rootMargin: '-20% 0px -20% 0px' },
     )
 
     sections.forEach((id) => {
@@ -378,6 +428,16 @@ function Header() {
     })
 
     return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < 100) {
+        setActiveSection('body')
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const isActive = (href: string) => {
@@ -524,7 +584,7 @@ function Intro() {
   return (
     <section
       id="body"
-      className="relative h-[600px] overflow-hidden group"
+      className="relative h-[800px] overflow-hidden group"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -753,10 +813,6 @@ function CallToAction() {
 }
 
 function Team() {
-  const getIcon = (iconName: string) => {
-    return iconMap[iconName] || Twitter
-  }
-
   return (
     <section id="team" className="py-20 bg-slate-50">
       <div className="container mx-auto px-4">
@@ -777,26 +833,28 @@ function Team() {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
               <div className="p-4 text-center">
-                <h3 className="font-semibold text-slate-800 mb-2 text-sm">
+                <h3 className="font-semibold text-slate-800 mb-1 text-sm">
                   {member.name}
                 </h3>
-                <div className="flex justify-center gap-3">
-                  {member.social.map((social) => {
-                    const Icon = getIcon(social)
-                    return (
-                      <a
-                        key={social}
-                        href="#"
-                        className="text-slate-400 hover:text-aiih-secondary transition-colors"
-                      >
-                        <Icon size={18} />
-                      </a>
-                    )
-                  })}
+                <a
+                  href={`mailto:${member.email}`}
+                  className="text-xs text-slate-500 hover:text-aiih-primary transition-colors mb-2 block"
+                >
+                  {member.email}
+                </a>
+                <div className="flex flex-wrap justify-center gap-1">
+                  {member.expertise.map((skill, skillIndex) => (
+                    <span
+                      key={skillIndex}
+                      className="px-2 py-0.5 text-xs bg-aiih-primary/10 text-aiih-primary rounded-full"
+                    >
+                      {skill}
+                    </span>
+                  ))}
                 </div>
               </div>
             </AnimatedSection>
