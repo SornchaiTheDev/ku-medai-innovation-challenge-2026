@@ -117,7 +117,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-slate-900 via-slate-900/85 to-transparent" />
     </section>
   )
 }

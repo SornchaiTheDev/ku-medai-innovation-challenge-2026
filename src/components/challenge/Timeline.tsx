@@ -2,10 +2,10 @@ import { challengeConstants, timelineIconMap } from '@/data/challenge-constants'
 
 export default function Timeline() {
   return (
-    <section className="py-20 bg-slate-50">
+    <section className="py-20 bg-slate-950">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Road to Demo Day
           </h2>
           <div className="w-20 h-1 bg-emerald-500 mx-auto" />
@@ -13,7 +13,7 @@ export default function Timeline() {
 
         <div className="max-w-4xl mx-auto">
           <div className="relative">
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-emerald-200 md:left-1/2 md:-translate-x-1/2" />
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-emerald-500/30 md:left-1/2 md:-translate-x-1/2" />
 
             <div className="space-y-8">
               {challengeConstants.timeline.map((item, index) => {
@@ -31,14 +31,14 @@ export default function Timeline() {
                     <div className="flex-1 md:text-right">
                       <div className={`md:hidden`}>
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Icon className="w-5 h-5 text-emerald-600" />
+                          <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Icon className="w-5 h-5 text-emerald-400" />
                           </div>
                           <div>
-                            <span className="text-sm font-semibold text-emerald-600">
+                            <span className="text-sm font-semibold text-emerald-400">
                               {item.date}
                             </span>
-                            <p className="font-semibold text-slate-800">
+                            <p className="font-semibold text-white">
                               {item.label}
                             </p>
                             {item.description && (
@@ -51,10 +51,10 @@ export default function Timeline() {
                       </div>
 
                       <div className="hidden md:block">
-                        <span className="text-sm font-semibold text-emerald-600">
+                        <span className="text-sm font-semibold text-emerald-400">
                           {item.date}
                         </span>
-                        <p className="font-semibold text-slate-800 text-lg">
+                        <p className="font-semibold text-white text-lg">
                           {item.label}
                         </p>
                         {item.description && (
@@ -65,8 +65,8 @@ export default function Timeline() {
                       </div>
                     </div>
 
-                    <div className="hidden md:flex w-16 h-16 bg-white rounded-full items-center justify-center border-2 border-emerald-200 z-10">
-                      <Icon className="w-6 h-6 text-emerald-600" />
+                    <div className="hidden md:flex w-16 h-16 bg-slate-800 rounded-full items-center justify-center border-2 border-emerald-500/30 z-10">
+                      <Icon className="w-6 h-6 text-emerald-400" />
                     </div>
 
                     <div className="flex-1 hidden md:block" />

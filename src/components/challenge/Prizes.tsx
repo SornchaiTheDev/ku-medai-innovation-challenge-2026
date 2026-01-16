@@ -2,14 +2,15 @@ import { challengeConstants } from '@/data/challenge-constants'
 
 export default function Prizes() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-slate-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Awards & Recognition
           </h2>
-          <p className="text-slate-600">
-            Total Prize Pool: <span className="font-semibold">65,000+ THB</span>
+          <p className="text-slate-400">
+            Total Prize Pool:{' '}
+            <span className="font-semibold text-emerald-400">65,000+ THB</span>
           </p>
           <div className="w-20 h-1 bg-emerald-500 mx-auto mt-4" />
         </div>
@@ -21,12 +22,12 @@ export default function Prizes() {
                 key={index}
                 className={`relative p-6 rounded-xl text-center ${
                   index === 0
-                    ? 'bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-200'
+                    ? 'bg-gradient-to-br from-amber-900/50 to-yellow-900/30 border-2 border-amber-600/50'
                     : index === 1
-                      ? 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200'
+                      ? 'bg-gradient-to-br from-slate-800 to-slate-800/50 border border-slate-700'
                       : index === 2
-                        ? 'bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200'
-                        : 'bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200'
+                        ? 'bg-gradient-to-br from-orange-900/40 to-amber-900/20 border border-orange-700/40'
+                        : 'bg-gradient-to-br from-slate-800 to-slate-800/50 border border-slate-700'
                 }`}
               >
                 {index === 0 && (
@@ -53,10 +54,8 @@ export default function Prizes() {
                 <div className="mt-4 mb-3">
                   <span className="text-3xl">{prize.badge}</span>
                 </div>
-                <h3 className="font-bold text-slate-800 mb-1">
-                  {prize.placement}
-                </h3>
-                <p className="text-xl font-bold text-emerald-600">
+                <h3 className="font-bold text-white mb-1">{prize.placement}</h3>
+                <p className="text-xl font-bold text-emerald-400">
                   {prize.prize}
                 </p>
               </div>
