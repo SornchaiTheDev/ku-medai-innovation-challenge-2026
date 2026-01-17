@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { createAuthClient } from 'better-auth/client'
 import { useEffect, useState } from 'react'
 import { LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import AnimatedContent from '@/components/AnimatedContent'
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardPage,
@@ -44,6 +44,7 @@ interface DashboardData {
 }
 
 function DashboardPage() {
+  const [session, setSession] = useState<{ user: any } | null>(null)
   const [data, setData] = useState<DashboardData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -56,6 +57,7 @@ function DashboardPage() {
           window.location.href = '/register'
           return
         }
+        setSession(sessionData)
 
         const response = await fetch('/api/team/get')
         if (response.ok) {
@@ -84,10 +86,10 @@ function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-aiih-secondary mx-auto"></div>
+          <p className="mt-4 text-slate-400">Loading...</p>
         </div>
       </div>
     )
@@ -95,13 +97,23 @@ function DashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-500">{error}</p>
-          <Button onClick={() => window.location.reload()} className="mt-4">
-            Try Again
-          </Button>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
+        <AnimatedContent
+          direction="vertical"
+          distance={30}
+          duration={0.5}
+          className="w-full max-w-md text-center"
+        >
+          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-8 shadow-2xl">
+            <p className="text-red-400 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full py-3 px-4 bg-aiih-secondary hover:bg-aiih-secondary/90 text-aiih-primary font-semibold rounded-lg transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </AnimatedContent>
       </div>
     )
   }
@@ -113,108 +125,189 @@ function DashboardPage() {
   const { team, profile } = data
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold">Team Dashboard</h1>
-            <p className="text-muted-foreground">
-              KU MedAI Innovation Challenge 2026
-            </p>
+        <AnimatedContent
+          direction="vertical"
+          distance={20}
+          duration={0.5}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-1">
+                Team Dashboard
+              </h1>
+              <p className="text-aiih-secondary text-lg">
+                KU MedAI Innovation Challenge 2026
+              </p>
+            </div>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
           </div>
-          <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
-        </div>
+        </AnimatedContent>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-lg border p-6">
-            <h2 className="text-lg font-semibold mb-4">Team Information</h2>
-            <dl className="space-y-3">
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Team Name</dt>
-                <dd className="font-medium">{team.name}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Track</dt>
-                <dd className="font-medium">
-                  {team.track === 'agro_medicine'
-                    ? '🌱 Agro-medicine'
-                    : '🧬 Bioinnovation'}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Status</dt>
-                <dd className="font-medium capitalize">{team.status}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Members</dt>
-                <dd className="font-medium">{team.members.length + 1} / 5</dd>
-              </div>
-            </dl>
-          </div>
+          <AnimatedContent
+            direction="vertical"
+            distance={20}
+            duration={0.4}
+            delay={0.1}
+          >
+            <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-white mb-4">
+                Team Information
+              </h2>
+              <dl className="space-y-3">
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Team Name</dt>
+                  <dd className="font-medium text-white">{team.name}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Track</dt>
+                  <dd className="font-medium">
+                    {team.track === 'agro_medicine' ? (
+                      <span className="text-green-400">🌱 Agro-medicine</span>
+                    ) : (
+                      <span className="text-purple-400">🧬 Bioinnovation</span>
+                    )}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Status</dt>
+                  <dd className="font-medium capitalize text-aiih-secondary">
+                    {team.status}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Members</dt>
+                  <dd className="font-medium text-white">
+                    {team.members.length + 1} / 5
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </AnimatedContent>
 
-          <div className="rounded-lg border p-6">
-            <h2 className="text-lg font-semibold mb-4">Team Lead (You)</h2>
-            <dl className="space-y-3">
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Phone</dt>
-                <dd className="font-medium">{profile.phone}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">Education</dt>
-                <dd className="font-medium text-right">
-                  {profile.educationType === 'high_school'
-                    ? `${profile.schoolName} (${profile.grade})`
-                    : `${profile.university} - ${profile.faculty}`}
-                </dd>
-              </div>
-            </dl>
-          </div>
+          <AnimatedContent
+            direction="vertical"
+            distance={20}
+            duration={0.4}
+            delay={0.2}
+          >
+            <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-white mb-4">
+                Team Lead (You)
+              </h2>
+              <dl className="space-y-3">
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Name</dt>
+                  <dd className="font-medium text-white">
+                    {session?.user?.name || session?.user?.email || 'Team Lead'}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Phone</dt>
+                  <dd className="font-medium text-white">{profile.phone}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-slate-400">Education</dt>
+                  <dd className="font-medium text-white text-right">
+                    {profile.educationType === 'high_school'
+                      ? `${profile.schoolName} (${profile.grade})`
+                      : `${profile.university} - ${profile.faculty}`}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </AnimatedContent>
 
-          <div className="rounded-lg border p-6 md:col-span-2">
-            <h2 className="text-lg font-semibold mb-4">Team Members</h2>
-            <div className="space-y-3">
-              {team.members.map((member) => {
-                const details = JSON.parse(member.educationDetails)
-                return (
-                  <div
-                    key={member.id}
-                    className="flex items-center justify-between py-2 border-b last:border-0"
-                  >
-                    <div>
-                      <div className="font-medium">{member.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {member.phone}
+          <AnimatedContent
+            direction="vertical"
+            distance={20}
+            duration={0.4}
+            delay={0.3}
+            className="md:col-span-2"
+          >
+            <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-white mb-4">
+                Team Members
+              </h2>
+              <div className="space-y-3">
+                {team.members.map((member) => {
+                  const details = JSON.parse(member.educationDetails)
+                  return (
+                    <div
+                      key={member.id}
+                      className="flex items-center justify-between py-3 border-b border-slate-700/50 last:border-0"
+                    >
+                      <div>
+                        <div className="font-medium text-white">
+                          {member.name}
+                        </div>
+                        <div className="text-sm text-slate-400">
+                          {member.phone}
+                        </div>
+                      </div>
+                      <div className="text-right text-sm">
+                        {member.educationType === 'high_school' ? (
+                          <span className="text-slate-300">
+                            {details.schoolName} ({details.grade})
+                          </span>
+                        ) : (
+                          <span className="text-slate-300">
+                            {details.university} - {details.faculty}
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="text-right text-sm">
-                      {member.educationType === 'high_school'
-                        ? `${details.schoolName} (${details.grade})`
-                        : `${details.university} - ${details.faculty}`}
-                    </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
-          </div>
+          </AnimatedContent>
         </div>
 
-        <div className="mt-8 rounded-lg border p-6 bg-muted/50">
-          <h2 className="text-lg font-semibold mb-2">Important Dates</h2>
-          <ul className="space-y-2 text-sm">
-            <li>
-              📅 <strong>Registration:</strong> Open until February 9, 2026
-            </li>
-            <li>
-              📤 <strong>Submission Deadline:</strong> March 5, 2026
-            </li>
-            <li>
-              🏆 <strong>Final Pitch:</strong> March 7, 2026
-            </li>
-          </ul>
-        </div>
+        <AnimatedContent
+          direction="vertical"
+          distance={20}
+          duration={0.4}
+          delay={0.4}
+        >
+          <div className="mt-6 rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
+            <h2 className="text-lg font-semibold text-white mb-3">
+              Important Dates
+            </h2>
+            <ul className="space-y-3 text-slate-300">
+              <li className="flex items-center gap-2">
+                <span className="text-aiih-secondary">📅</span>
+                <span>
+                  <strong className="text-white">Registration:</strong> Open
+                  until February 9, 2026
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-aiih-secondary">📤</span>
+                <span>
+                  <strong className="text-white">Submission Deadline:</strong>{' '}
+                  March 5, 2026
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-aiih-secondary">🏆</span>
+                <span>
+                  <strong className="text-white">Final Pitch:</strong> March 7,
+                  2026
+                </span>
+              </li>
+            </ul>
+          </div>
+        </AnimatedContent>
       </div>
     </div>
   )
