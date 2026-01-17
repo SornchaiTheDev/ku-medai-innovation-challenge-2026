@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { GraduationCap, Phone, School } from 'lucide-react'
+import { GraduationCap, Phone, School, User } from 'lucide-react'
 import { InputField } from './InputField'
 import { SelectField } from './SelectField'
 import { RegistrationBackButton } from './RegistrationBackButton'
@@ -19,12 +19,14 @@ interface EducationDetails {
 interface StepTeamLeadProps {
   user: { name: string; email: string; image?: string | null }
   onNext: (data: {
+    fullName: string
     phone: string
     educationType: 'high_school' | 'university'
     educationDetails: EducationDetails
   }) => void
   onBack: () => void
   initialData?: {
+    fullName: string
     phone: string
     educationType: 'high_school' | 'university'
     educationDetails: EducationDetails
@@ -37,6 +39,7 @@ export function StepTeamLead({
   onBack,
   initialData,
 }: StepTeamLeadProps) {
+  const [fullName, setFullName] = useState(initialData?.fullName || user.name)
   const [phone, setPhone] = useState(initialData?.phone || '')
   const [educationType, setEducationType] = useState<
     'high_school' | 'university'
@@ -55,6 +58,10 @@ export function StepTeamLead({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const newErrors: Record<string, string> = {}
+
+    if (!fullName.trim()) {
+      newErrors.fullName = 'Full name is required'
+    }
 
     if (!phone.trim()) {
       newErrors.phone = 'Phone number is required'
@@ -83,7 +90,7 @@ export function StepTeamLead({
       return
     }
 
-    onNext({ phone, educationType, educationDetails })
+    onNext({ fullName, phone, educationType, educationDetails })
   }
 
   return (
@@ -104,6 +111,34 @@ export function StepTeamLead({
           Team Lead
         </div>
       </div>
+
+      <InputField
+        label="Full Name"
+        htmlFor="fullName"
+        icon={<User className="w-4 h-4" />}
+        required
+        value={fullName}
+        onChange={(e) => {
+          setFullName(e.target.value)
+          if (e.target.value.trim()) {
+            setErrors((prev) => {
+              const next = { ...prev }
+              delete next.fullName
+              return next
+            })
+          }
+        }}
+        onBlur={() => {
+          if (!fullName.trim()) {
+            setErrors((prev) => ({
+              ...prev,
+              fullName: 'Full name is required',
+            }))
+          }
+        }}
+        placeholder="Thai and English name"
+        error={errors.fullName}
+      />
 
       <InputField
         label="Phone Number"

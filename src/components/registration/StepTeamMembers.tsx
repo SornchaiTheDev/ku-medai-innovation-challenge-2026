@@ -238,12 +238,12 @@ export function StepTeamMembers({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (members.length < 2) {
-      alert('You need at least 2 team members (3-5 total including team lead)')
+      alert('You need to add 2-4 more members (3-5 total including team lead)')
       return
     }
     if (members.length > 4) {
       alert(
-        'You can have at most 4 team members (3-5 total including team lead)',
+        'You can add at most 4 more members (3-5 total including team lead)',
       )
       return
     }
@@ -258,7 +258,7 @@ export function StepTeamMembers({
         <div>
           <h3 className="text-lg font-semibold text-white">Team Members</h3>
           <p className="text-sm text-slate-400">
-            Add 2-4 members (team will have 3-5 people including you)
+            Add 2-4 more members (team will have 3-5 people including you)
           </p>
         </div>
         <Button

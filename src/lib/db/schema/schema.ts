@@ -1,4 +1,11 @@
-import { pgEnum, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
+import {
+  boolean,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const educationTypeEnum = pgEnum('education_type', [
@@ -14,22 +21,8 @@ export const teamStatusEnum = pgEnum('status', [
   'finalized',
 ])
 
-export const profiles = pgTable('profiles', {
-  id: serial('id').primaryKey(),
-  userId: text('user_id').notNull().unique(),
-  phone: text('phone').notNull(),
-  educationType: educationTypeEnum('education_type').notNull(),
-  schoolName: text('school_name'),
-  grade: text('grade'),
-  university: text('university'),
-  faculty: text('faculty'),
-  studentId: text('student_id'),
-  createdAt: timestamp('created_at').defaultNow(),
-})
-
 export const teams = pgTable('teams', {
   id: serial('id').primaryKey(),
-  leaderId: text('leader_id').notNull(),
   name: text('name').notNull(),
   track: trackEnum('track').notNull(),
   status: teamStatusEnum('status').default('registered'),
@@ -38,22 +31,16 @@ export const teams = pgTable('teams', {
 
 export const teamMembers = pgTable('team_members', {
   id: serial('id').primaryKey(),
+  userId: text('user_id'),
   teamId: serial('team_id').references(() => teams.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   phone: text('phone').notNull(),
   educationType: educationTypeEnum('education_type').notNull(),
   educationDetails: text('education_details').notNull(),
+  isLeader: boolean('is_leader').default(false),
 })
 
-export const profilesRelations = relations(profiles, ({ many }) => ({
-  teams: many(teams),
-}))
-
-export const teamsRelations = relations(teams, ({ one, many }) => ({
-  leader: one(profiles, {
-    fields: [teams.leaderId],
-    references: [profiles.userId],
-  }),
+export const teamsRelations = relations(teams, ({ many }) => ({
   members: many(teamMembers),
 }))
 
@@ -64,8 +51,6 @@ export const teamMembersRelations = relations(teamMembers, ({ one }) => ({
   }),
 }))
 
-export type Profile = typeof profiles.$inferSelect
-export type InsertProfile = typeof profiles.$inferInsert
 export type Team = typeof teams.$inferSelect
 export type InsertTeam = typeof teams.$inferInsert
 export type TeamMember = typeof teamMembers.$inferSelect

@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import { and } from 'drizzle-orm'
 import { createFileRoute } from '@tanstack/react-router'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { profiles, teamMembers, teams } from '@/lib/db/schema/schema'
+import { teamMembers, teams } from '@/lib/db/schema/schema'
 
 const educationDetailsSchema = z.discriminatedUnion('type', [
   z.object({
@@ -20,6 +21,7 @@ const educationDetailsSchema = z.discriminatedUnion('type', [
 const createTeamSchema = z.object({
   teamName: z.string().min(3).max(50),
   track: z.enum(['agro_medicine', 'bioinnovation']),
+  leaderFullName: z.string().min(1),
   leaderProfile: z.object({
     phone: z.string().min(1),
     educationType: z.enum(['high_school', 'university']),
@@ -56,8 +58,12 @@ export const Route = createFileRoute('/api/team/create')({
 
           const userId = session.user.id
 
-          const existingTeam = await db.query.teams.findFirst({
-            where: (teams, { eq }) => eq(teams.leaderId, userId),
+          const existingTeam = await db.query.teamMembers.findFirst({
+            where: (teamMembers, { eq }) =>
+              and(
+                eq(teamMembers.userId, userId),
+                eq(teamMembers.isLeader, true),
+              ),
           })
 
           if (existingTeam) {
@@ -75,35 +81,35 @@ export const Route = createFileRoute('/api/team/create')({
             )
           }
 
-          const leaderProfileData = {
-            userId,
-            phone: input.leaderProfile.phone,
-            educationType: input.leaderProfile.educationType,
-            ...(input.leaderProfile.educationDetails.type === 'high_school'
-              ? {
-                  schoolName: input.leaderProfile.educationDetails.schoolName,
-                  grade: input.leaderProfile.educationDetails.grade,
-                }
-              : {
-                  university: input.leaderProfile.educationDetails.university,
-                  faculty: input.leaderProfile.educationDetails.faculty,
-                }),
-          }
-
-          await db
-            .insert(profiles)
-            .values(leaderProfileData)
-            .onConflictDoNothing()
-
           const [team] = await db
             .insert(teams)
             .values({
-              leaderId: userId,
               name: input.teamName,
               track: input.track,
               status: 'registered',
             })
             .returning()
+
+          await db.insert(teamMembers).values({
+            userId: userId,
+            teamId: team.id,
+            name: input.leaderFullName,
+            phone: input.leaderProfile.phone,
+            educationType: input.leaderProfile.educationType,
+            educationDetails: JSON.stringify({
+              type: input.leaderProfile.educationDetails.type,
+              ...(input.leaderProfile.educationDetails.type === 'high_school'
+                ? {
+                    schoolName: input.leaderProfile.educationDetails.schoolName,
+                    grade: input.leaderProfile.educationDetails.grade,
+                  }
+                : {
+                    university: input.leaderProfile.educationDetails.university,
+                    faculty: input.leaderProfile.educationDetails.faculty,
+                  }),
+            }),
+            isLeader: true,
+          })
 
           for (const member of input.members) {
             await db.insert(teamMembers).values({

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { db } from '@/lib/db'
-import { profiles, teamMembers, teams } from '@/lib/db/schema/schema'
+import { teamMembers, teams } from '@/lib/db/schema/schema'
 import { auth } from '@/lib/auth'
 
 const educationDetailsSchema = z.union([
@@ -27,6 +27,7 @@ const teamMemberInputSchema = z.object({
 export const createTeam = async (input: {
   teamName: string
   track: 'agro_medicine' | 'bioinnovation'
+  leaderFullName: string
   leaderProfile: {
     phone: string
     educationType: 'high_school' | 'university'
@@ -44,8 +45,9 @@ export const createTeam = async (input: {
 
   const userId = session.user.id
 
-  const existingTeam = await db.query.teams.findFirst({
-    where: (teams, { eq }) => eq(teams.leaderId, userId),
+  const existingTeam = await db.query.teamMembers.findFirst({
+    where: (teamMembers, { eq, and }) =>
+      and(eq(teamMembers.userId, userId), eq(teamMembers.isLeader, true)),
   })
 
   if (existingTeam) {
@@ -57,33 +59,36 @@ export const createTeam = async (input: {
     throw new Error('Team must have 3-5 members')
   }
 
-  const leaderProfileData = {
-    userId,
-    phone: input.leaderProfile.phone,
-    educationType: input.leaderProfile.educationType,
-    ...(input.leaderProfile.educationDetails.type === 'high_school'
-      ? {
-          schoolName: input.leaderProfile.educationDetails.schoolName,
-          grade: input.leaderProfile.educationDetails.grade,
-        }
-      : {
-          university: input.leaderProfile.educationDetails.university,
-          faculty: input.leaderProfile.educationDetails.faculty,
-          studentId: input.leaderProfile.educationDetails.studentId,
-        }),
-  }
-
-  await db.insert(profiles).values(leaderProfileData).onConflictDoNothing()
-
   const [team] = await db
     .insert(teams)
     .values({
-      leaderId: userId,
       name: input.teamName,
       track: input.track,
       status: 'registered',
     })
     .returning()
+
+  await db.insert(teamMembers).values({
+    userId: userId,
+    teamId: team.id,
+    name: input.leaderFullName,
+    phone: input.leaderProfile.phone,
+    educationType: input.leaderProfile.educationType,
+    educationDetails: JSON.stringify({
+      type: input.leaderProfile.educationDetails.type,
+      ...(input.leaderProfile.educationDetails.type === 'high_school'
+        ? {
+            schoolName: input.leaderProfile.educationDetails.schoolName,
+            grade: input.leaderProfile.educationDetails.grade,
+          }
+        : {
+            university: input.leaderProfile.educationDetails.university,
+            faculty: input.leaderProfile.educationDetails.faculty,
+            studentId: input.leaderProfile.educationDetails.studentId,
+          }),
+    }),
+    isLeader: true,
+  })
 
   for (const member of input.members) {
     await db.insert(teamMembers).values({
@@ -119,10 +124,7 @@ export const getUserTeam = async () => {
     return null
   }
 
-  const userId = session.user.id
-
   const team = await db.query.teams.findFirst({
-    where: (teams, { eq }) => eq(teams.leaderId, userId),
     with: {
       members: true,
     },
@@ -132,12 +134,7 @@ export const getUserTeam = async () => {
     return null
   }
 
-  const profile = await db.query.profiles.findFirst({
-    where: (profiles, { eq }) => eq(profiles.userId, userId),
-  })
-
   return {
     team,
-    profile,
   }
 }

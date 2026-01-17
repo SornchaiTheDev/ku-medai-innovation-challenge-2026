@@ -17,8 +17,12 @@ export const Route = createFileRoute('/api/team/check-registration')({
 
           const userId = session.user.id
 
-          const existingTeam = await db.query.teams.findFirst({
-            where: (teams, { eq }) => eq(teams.leaderId, userId),
+          const existingTeam = await db.query.teamMembers.findFirst({
+            where: (teamMembers, { eq, and }) =>
+              and(
+                eq(teamMembers.userId, userId),
+                eq(teamMembers.isLeader, true),
+              ),
           })
 
           return Response.json({ isRegistered: !!existingTeam })

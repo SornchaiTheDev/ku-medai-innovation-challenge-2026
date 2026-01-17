@@ -29,6 +29,7 @@ interface TeamInfoData {
 }
 
 interface TeamLeadData {
+  fullName: string
   phone: string
   educationType: 'high_school' | 'university'
   educationDetails: {
@@ -239,6 +240,7 @@ function RegisterPage() {
         body: JSON.stringify({
           teamName: teamInfo.teamName,
           track: teamInfo.track,
+          leaderFullName: teamLead.fullName,
           leaderProfile: {
             phone: teamLead.phone,
             educationType: teamLead.educationType,
@@ -392,6 +394,7 @@ function RegisterPage() {
               initialData={
                 teamLead
                   ? {
+                      fullName: teamLead.fullName,
                       phone: teamLead.phone,
                       educationType: teamLead.educationType,
                       educationDetails: teamLead.educationDetails,
@@ -418,6 +421,7 @@ function RegisterPage() {
               teamName={teamInfo.teamName}
               track={teamInfo.track}
               user={session.user}
+              leaderFullName={teamLead.fullName}
               leaderPhone={teamLead.phone}
               leaderEducation={teamLead.educationDetails}
               members={members}

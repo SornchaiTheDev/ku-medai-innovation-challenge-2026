@@ -30,6 +30,7 @@ interface RegistrationSummaryProps {
   teamName: string
   track: 'agro_medicine' | 'bioinnovation'
   user: { name: string; email: string }
+  leaderFullName: string
   leaderPhone: string
   leaderEducation: {
     type: 'high_school' | 'university'
@@ -49,6 +50,7 @@ export function RegistrationSummary({
   teamName,
   track,
   user,
+  leaderFullName,
   leaderPhone,
   leaderEducation,
   members,
@@ -127,7 +129,7 @@ export function RegistrationSummary({
           <div className="grid gap-3">
             <div className="flex items-center justify-between py-2 border-b border-slate-700/50 last:border-0">
               <span className="text-sm text-slate-400">Name</span>
-              <span className="font-medium text-white">{user.name}</span>
+              <span className="font-medium text-white">{leaderFullName}</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-slate-700/50 last:border-0">
               <span className="text-sm text-slate-400">Email</span>
