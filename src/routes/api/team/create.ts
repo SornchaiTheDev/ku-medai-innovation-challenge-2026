@@ -4,6 +4,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { teamMembers, teams } from '@/lib/db/schema/schema'
+import { generateTeamRegistrationEmail, sendEmail } from '@/lib/email'
 
 const educationDetailsSchema = z.discriminatedUnion('type', [
   z.object({
@@ -130,6 +131,24 @@ export const Route = createFileRoute('/api/team/create')({
                     }),
               }),
             })
+          }
+
+          const memberCount = input.members.length + 1
+          const emailContent = generateTeamRegistrationEmail(
+            input.teamName,
+            input.leaderFullName,
+            memberCount,
+          )
+
+          if (session.user.email) {
+            sendEmail({
+              to: session.user.email,
+              subject: `Team "${input.teamName}" Registered - KU MedAI Innovation Challenge`,
+              html: emailContent.html,
+              text: emailContent.text,
+            }).catch((err) =>
+              console.error('Failed to send registration email:', err),
+            )
           }
 
           return Response.json({ success: true, teamId: team.id })
