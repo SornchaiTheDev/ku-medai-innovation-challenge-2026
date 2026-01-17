@@ -14,7 +14,6 @@ const educationDetailsSchema = z.discriminatedUnion('type', [
     type: z.literal('university'),
     university: z.string().min(1),
     faculty: z.string().min(1),
-    studentId: z.string().min(1),
   }),
 ])
 
@@ -88,7 +87,6 @@ export const Route = createFileRoute('/api/team/create')({
               : {
                   university: input.leaderProfile.educationDetails.university,
                   faculty: input.leaderProfile.educationDetails.faculty,
-                  studentId: input.leaderProfile.educationDetails.studentId,
                 }),
           }
 
@@ -123,7 +121,6 @@ export const Route = createFileRoute('/api/team/create')({
                   : {
                       university: member.educationDetails.university,
                       faculty: member.educationDetails.faculty,
-                      studentId: member.educationDetails.studentId,
                     }),
               }),
             })
