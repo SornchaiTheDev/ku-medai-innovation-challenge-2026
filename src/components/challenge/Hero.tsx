@@ -110,12 +110,12 @@ export default function Hero() {
           </div>
         </FadeContent>
 
-        <div className="text-3xl md:text-6xl font-bold text-white mb-8 md:mb-10 tracking-tight space-y-4">
+        <div className="text-3xl md:text-4xl xl:text-6xl font-bold text-white mb-8 md:mb-10 tracking-tight space-y-4">
           <TextType
             text={challengeConstants.headline}
             typingSpeed={60}
             pauseDuration={3000}
-            className="text-lg md:text-6xl"
+            className="text-lg md:text-2xl xl:text-5xl"
           />
           <br />
           <BlurText
