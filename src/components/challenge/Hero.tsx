@@ -132,9 +132,11 @@ export default function Hero({
         </FadeContent>
 
         {!registrationStatus.isOpened && (
-          <CountdownTimer
-            targetDate={challengeConstants.dates.registrationOpen}
-          />
+          <FadeContent duration={600} delay={800}>
+            <CountdownTimer
+              targetDate={challengeConstants.dates.registrationOpen}
+            />
+          </FadeContent>
         )}
 
         {!registrationStatus.isClosed && (
