@@ -17,7 +17,7 @@ import { RegistrationSummary } from '@/components/registration/RegistrationSumma
 import { cn } from '@/lib/utils'
 import AnimatedContent from '@/components/AnimatedContent'
 
-export const Route = createFileRoute('/register')({
+export const Route = createFileRoute('/challenge/register')({
   component: RegisterPage,
 })
 
@@ -141,7 +141,7 @@ function RegisterPage() {
           </div>
           <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-8 shadow-2xl">
             <Link
-              to="/dashboard"
+              to="/challenge/dashboard"
               className="inline-flex items-center justify-center w-full py-3 px-4 bg-aiih-secondary hover:bg-aiih-secondary/90 text-aiih-primary font-semibold rounded-lg transition-colors"
             >
               Go to Dashboard
@@ -259,7 +259,7 @@ function RegisterPage() {
         throw new Error(result.error || 'Failed to create team')
       }
 
-      window.location.href = '/dashboard'
+      window.location.href = '/challenge/dashboard'
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {

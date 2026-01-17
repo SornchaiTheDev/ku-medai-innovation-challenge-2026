@@ -9,25 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChallengeIndexRouteImport } from './routes/challenge/index'
+import { Route as ChallengeRegisterRouteImport } from './routes/challenge/register'
+import { Route as ChallengeDashboardRouteImport } from './routes/challenge/dashboard'
 import { Route as ApiTeamGetRouteImport } from './routes/api/team/get'
 import { Route as ApiTeamCreateRouteImport } from './routes/api/team/create'
 import { Route as ApiTeamCheckRegistrationRouteImport } from './routes/api/team/check-registration'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -36,6 +26,16 @@ const IndexRoute = IndexRouteImport.update({
 const ChallengeIndexRoute = ChallengeIndexRouteImport.update({
   id: '/challenge/',
   path: '/challenge/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengeRegisterRoute = ChallengeRegisterRouteImport.update({
+  id: '/challenge/register',
+  path: '/challenge/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengeDashboardRoute = ChallengeDashboardRouteImport.update({
+  id: '/challenge/dashboard',
+  path: '/challenge/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTeamGetRoute = ApiTeamGetRouteImport.update({
@@ -62,8 +62,8 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/register': typeof RegisterRoute
+  '/challenge/dashboard': typeof ChallengeDashboardRoute
+  '/challenge/register': typeof ChallengeRegisterRoute
   '/challenge': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
@@ -72,8 +72,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/register': typeof RegisterRoute
+  '/challenge/dashboard': typeof ChallengeDashboardRoute
+  '/challenge/register': typeof ChallengeRegisterRoute
   '/challenge': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
@@ -83,8 +83,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/register': typeof RegisterRoute
+  '/challenge/dashboard': typeof ChallengeDashboardRoute
+  '/challenge/register': typeof ChallengeRegisterRoute
   '/challenge/': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
@@ -95,8 +95,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/dashboard'
-    | '/register'
+    | '/challenge/dashboard'
+    | '/challenge/register'
     | '/challenge'
     | '/api/auth/$'
     | '/api/team/check-registration'
@@ -105,8 +105,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard'
-    | '/register'
+    | '/challenge/dashboard'
+    | '/challenge/register'
     | '/challenge'
     | '/api/auth/$'
     | '/api/team/check-registration'
@@ -115,8 +115,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/dashboard'
-    | '/register'
+    | '/challenge/dashboard'
+    | '/challenge/register'
     | '/challenge/'
     | '/api/auth/$'
     | '/api/team/check-registration'
@@ -126,8 +126,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
-  RegisterRoute: typeof RegisterRoute
+  ChallengeDashboardRoute: typeof ChallengeDashboardRoute
+  ChallengeRegisterRoute: typeof ChallengeRegisterRoute
   ChallengeIndexRoute: typeof ChallengeIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTeamCheckRegistrationRoute: typeof ApiTeamCheckRegistrationRoute
@@ -137,20 +137,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -163,6 +149,20 @@ declare module '@tanstack/react-router' {
       path: '/challenge'
       fullPath: '/challenge'
       preLoaderRoute: typeof ChallengeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenge/register': {
+      id: '/challenge/register'
+      path: '/challenge/register'
+      fullPath: '/challenge/register'
+      preLoaderRoute: typeof ChallengeRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenge/dashboard': {
+      id: '/challenge/dashboard'
+      path: '/challenge/dashboard'
+      fullPath: '/challenge/dashboard'
+      preLoaderRoute: typeof ChallengeDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/team/get': {
@@ -198,8 +198,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
-  RegisterRoute: RegisterRoute,
+  ChallengeDashboardRoute: ChallengeDashboardRoute,
+  ChallengeRegisterRoute: ChallengeRegisterRoute,
   ChallengeIndexRoute: ChallengeIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTeamCheckRegistrationRoute: ApiTeamCheckRegistrationRoute,

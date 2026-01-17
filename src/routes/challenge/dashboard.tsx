@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { LogOut } from 'lucide-react'
 import AnimatedContent from '@/components/AnimatedContent'
 
-export const Route = createFileRoute('/dashboard')({
+export const Route = createFileRoute('/challenge/dashboard')({
   component: DashboardPage,
 })
 
@@ -54,7 +54,7 @@ function DashboardPage() {
       try {
         const { data: sessionData } = await authClient.getSession()
         if (!sessionData) {
-          window.location.href = '/register'
+          window.location.href = '/challenge/register'
           return
         }
         setSession(sessionData)
@@ -64,7 +64,7 @@ function DashboardPage() {
           const teamData = await response.json()
           setData(teamData)
         } else if (response.status === 404) {
-          window.location.href = '/register'
+          window.location.href = '/challenge/register'
           return
         } else {
           setError('Failed to load team data')
