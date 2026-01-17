@@ -19,32 +19,20 @@ interface TeamData {
   status: string
   members: Array<{
     id: number
+    userId: string | null
     name: string
     phone: string
     educationType: string
     educationDetails: string
+    isLeader: boolean
   }>
-}
-
-interface ProfileData {
-  id: number
-  userId: string
-  phone: string
-  educationType: string
-  schoolName: string | null
-  grade: string | null
-  university: string | null
-  faculty: string | null
-  studentId: string | null
 }
 
 interface DashboardData {
   team: TeamData
-  profile: ProfileData
 }
 
 function DashboardPage() {
-  const [session, setSession] = useState<{ user: any } | null>(null)
   const [data, setData] = useState<DashboardData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
@@ -57,7 +45,6 @@ function DashboardPage() {
           window.location.href = '/challenge/register'
           return
         }
-        setSession(sessionData)
 
         const response = await fetch('/api/team/get')
         if (response.ok) {
@@ -122,7 +109,7 @@ function DashboardPage() {
     return null
   }
 
-  const { team, profile } = data
+  const { team } = data
 
   return (
     <div className="min-h-screen py-8 px-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
@@ -152,12 +139,13 @@ function DashboardPage() {
           </div>
         </AnimatedContent>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6">
           <AnimatedContent
             direction="vertical"
             distance={20}
             duration={0.4}
             delay={0.1}
+            className="md:col-span-2"
           >
             <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
               <h2 className="text-lg font-semibold text-white mb-4">
@@ -187,7 +175,7 @@ function DashboardPage() {
                 <div className="flex justify-between">
                   <dt className="text-slate-400">Members</dt>
                   <dd className="font-medium text-white">
-                    {team.members.length + 1} / 5
+                    {team.members.length} / 5
                   </dd>
                 </div>
               </dl>
@@ -199,39 +187,6 @@ function DashboardPage() {
             distance={20}
             duration={0.4}
             delay={0.2}
-          >
-            <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
-              <h2 className="text-lg font-semibold text-white mb-4">
-                Team Lead (You)
-              </h2>
-              <dl className="space-y-3">
-                <div className="flex justify-between">
-                  <dt className="text-slate-400">Name</dt>
-                  <dd className="font-medium text-white">
-                    {session?.user?.name || session?.user?.email || 'Team Lead'}
-                  </dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-slate-400">Phone</dt>
-                  <dd className="font-medium text-white">{profile.phone}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-slate-400">Education</dt>
-                  <dd className="font-medium text-white text-right">
-                    {profile.educationType === 'high_school'
-                      ? `${profile.schoolName} (${profile.grade})`
-                      : `${profile.university} - ${profile.faculty}`}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-          </AnimatedContent>
-
-          <AnimatedContent
-            direction="vertical"
-            distance={20}
-            duration={0.4}
-            delay={0.3}
             className="md:col-span-2"
           >
             <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl">
@@ -246,12 +201,19 @@ function DashboardPage() {
                       key={member.id}
                       className="flex items-center justify-between py-3 border-b border-slate-700/50 last:border-0"
                     >
-                      <div>
-                        <div className="font-medium text-white">
-                          {member.name}
-                        </div>
-                        <div className="text-sm text-slate-400">
-                          {member.phone}
+                      <div className="flex items-center gap-2">
+                        <div>
+                          <div className="font-medium text-white flex items-center gap-2">
+                            {member.name}
+                            {member.isLeader && (
+                              <span className="px-2 py-0.5 rounded-full bg-aiih-secondary/20 text-aiih-secondary text-xs font-medium">
+                                Leader
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-sm text-slate-400">
+                            {member.phone}
+                          </div>
                         </div>
                       </div>
                       <div className="text-right text-sm">
