@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { GraduationCap, Phone, Plus, School, Trash2, User } from 'lucide-react'
+import { InputField } from './InputField'
+import { SelectField } from './SelectField'
 import { RegistrationBackButton } from './RegistrationBackButton'
 import { RegistrationContinueButton } from './RegistrationContinueButton'
 import { cn } from '@/lib/utils'
@@ -326,96 +328,39 @@ export function StepTeamMembers({
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Full Name <span className="text-aiih-secondary">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={member.name}
-                  onChange={(e) =>
-                    updateMember(member.id, 'name', e.target.value)
-                  }
-                  onBlur={() =>
-                    validateMemberField(member.id, 'name', member.name)
-                  }
-                  placeholder="Thai and English name"
-                  className={cn(
-                    'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                    'transition-all duration-200',
-                    errors[member.id]?.name
-                      ? 'border-red-500/50 focus-visible:ring-red-500'
-                      : 'border-slate-700 hover:border-slate-600',
-                  )}
-                />
-                {errors[member.id]?.name && (
-                  <p className="text-sm text-red-400 flex items-center gap-1">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    {errors[member.id].name}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  Phone <span className="text-aiih-secondary">*</span>
-                </label>
-                <input
-                  type="tel"
-                  value={member.phone}
-                  onChange={(e) =>
-                    updateMember(member.id, 'phone', e.target.value)
-                  }
-                  onBlur={() =>
-                    validateMemberField(member.id, 'phone', member.phone)
-                  }
-                  placeholder="0xx-xxx-xxxx"
-                  className={cn(
-                    'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                    'transition-all duration-200',
-                    errors[member.id]?.phone
-                      ? 'border-red-500/50 focus-visible:ring-red-500'
-                      : 'border-slate-700 hover:border-slate-600',
-                  )}
-                />
-                {errors[member.id]?.phone && (
-                  <p className="text-sm text-red-400 flex items-center gap-1">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    {errors[member.id].phone}
-                  </p>
-                )}
-              </div>
+              <InputField
+                label="Full Name"
+                icon={<User className="w-4 h-4" />}
+                required
+                value={member.name}
+                onChange={(e) =>
+                  updateMember(member.id, 'name', e.target.value)
+                }
+                onBlur={() =>
+                  validateMemberField(member.id, 'name', member.name)
+                }
+                placeholder="Thai and English name"
+                error={errors[member.id]?.name}
+              />
+              <InputField
+                label="Phone"
+                icon={<Phone className="w-4 h-4" />}
+                required
+                type="tel"
+                value={member.phone}
+                onChange={(e) =>
+                  updateMember(member.id, 'phone', e.target.value)
+                }
+                onBlur={() =>
+                  validateMemberField(member.id, 'phone', member.phone)
+                }
+                placeholder="0xx-xxx-xxxx"
+                error={errors[member.id]?.phone}
+              />
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-semibold text-slate-200">
+              <label className="text-sm font-semibold text-slate-200 block mb-3">
                 Education Level <span className="text-aiih-secondary">*</span>
               </label>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -482,265 +427,121 @@ export function StepTeamMembers({
 
             {member.educationType === 'high_school' ? (
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-200">
-                    School Name <span className="text-aiih-secondary">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={member.educationDetails.schoolName || ''}
-                    onChange={(e) =>
-                      updateMemberEducation(member.id, {
-                        ...member.educationDetails,
-                        schoolName: e.target.value,
-                      })
-                    }
-                    onBlur={() =>
-                      validateMemberField(
-                        member.id,
-                        'schoolName',
-                        member.educationDetails.schoolName,
-                      )
-                    }
-                    placeholder="School name"
-                    className={cn(
-                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                      'transition-all duration-200',
-                      errors[member.id]?.schoolName
-                        ? 'border-red-500/50 focus-visible:ring-red-500'
-                        : 'border-slate-700 hover:border-slate-600',
-                    )}
-                  />
-                  {errors[member.id]?.schoolName && (
-                    <p className="text-sm text-red-400 flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {errors[member.id].schoolName}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-200">
-                    Grade <span className="text-aiih-secondary">*</span>
-                  </label>
-                  <select
-                    value={member.educationDetails.grade || ''}
-                    onChange={(e) =>
-                      updateMemberEducation(member.id, {
-                        ...member.educationDetails,
-                        grade: e.target.value,
-                      })
-                    }
-                    onBlur={() =>
-                      validateMemberField(
-                        member.id,
-                        'grade',
-                        member.educationDetails.grade,
-                      )
-                    }
-                    className={cn(
-                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                      'transition-all duration-200',
-                      errors[member.id]?.grade
-                        ? 'border-red-500/50 focus-visible:ring-red-500'
-                        : 'border-slate-700 hover:border-slate-600',
-                    )}
-                  >
-                    <option value="" className="bg-slate-800">
-                      Select grade
-                    </option>
-                    <option value="M.4" className="bg-slate-800">
-                      M.4
-                    </option>
-                    <option value="M.5" className="bg-slate-800">
-                      M.5
-                    </option>
-                    <option value="M.6" className="bg-slate-800">
-                      M.6
-                    </option>
-                  </select>
-                  {errors[member.id]?.grade && (
-                    <p className="text-sm text-red-400 flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {errors[member.id].grade}
-                    </p>
-                  )}
-                </div>
+                <InputField
+                  label="School Name"
+                  required
+                  value={member.educationDetails.schoolName || ''}
+                  onChange={(e) =>
+                    updateMemberEducation(member.id, {
+                      ...member.educationDetails,
+                      schoolName: e.target.value,
+                    })
+                  }
+                  onBlur={() =>
+                    validateMemberField(
+                      member.id,
+                      'schoolName',
+                      member.educationDetails.schoolName,
+                    )
+                  }
+                  placeholder="School name"
+                  error={errors[member.id]?.schoolName}
+                />
+                <SelectField
+                  label="Grade"
+                  required
+                  value={member.educationDetails.grade || ''}
+                  onChange={(e) =>
+                    updateMemberEducation(member.id, {
+                      ...member.educationDetails,
+                      grade: e.target.value,
+                    })
+                  }
+                  onBlur={() =>
+                    validateMemberField(
+                      member.id,
+                      'grade',
+                      member.educationDetails.grade,
+                    )
+                  }
+                  error={errors[member.id]?.grade}
+                >
+                  <option value="" className="bg-slate-800">
+                    Select grade
+                  </option>
+                  <option value="M.4" className="bg-slate-800">
+                    M.4
+                  </option>
+                  <option value="M.5" className="bg-slate-800">
+                    M.5
+                  </option>
+                  <option value="M.6" className="bg-slate-800">
+                    M.6
+                  </option>
+                </SelectField>
               </div>
             ) : (
               <div className="grid gap-4 sm:grid-cols-3">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-200">
-                    University <span className="text-aiih-secondary">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={member.educationDetails.university || ''}
-                    onChange={(e) =>
-                      updateMemberEducation(member.id, {
-                        ...member.educationDetails,
-                        university: e.target.value,
-                      })
-                    }
-                    onBlur={() =>
-                      validateMemberField(
-                        member.id,
-                        'university',
-                        member.educationDetails.university,
-                      )
-                    }
-                    placeholder="University"
-                    className={cn(
-                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                      'transition-all duration-200',
-                      errors[member.id]?.university
-                        ? 'border-red-500/50 focus-visible:ring-red-500'
-                        : 'border-slate-700 hover:border-slate-600',
-                    )}
-                  />
-                  {errors[member.id]?.university && (
-                    <p className="text-sm text-red-400 flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {errors[member.id].university}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-200">
-                    Faculty <span className="text-aiih-secondary">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={member.educationDetails.faculty || ''}
-                    onChange={(e) =>
-                      updateMemberEducation(member.id, {
-                        ...member.educationDetails,
-                        faculty: e.target.value,
-                      })
-                    }
-                    onBlur={() =>
-                      validateMemberField(
-                        member.id,
-                        'faculty',
-                        member.educationDetails.faculty,
-                      )
-                    }
-                    placeholder="Faculty"
-                    className={cn(
-                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                      'transition-all duration-200',
-                      errors[member.id]?.faculty
-                        ? 'border-red-500/50 focus-visible:ring-red-500'
-                        : 'border-slate-700 hover:border-slate-600',
-                    )}
-                  />
-                  {errors[member.id]?.faculty && (
-                    <p className="text-sm text-red-400 flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {errors[member.id].faculty}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-200">
-                    Student ID <span className="text-aiih-secondary">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={member.educationDetails.studentId || ''}
-                    onChange={(e) =>
-                      updateMemberEducation(member.id, {
-                        ...member.educationDetails,
-                        studentId: e.target.value,
-                      })
-                    }
-                    onBlur={() =>
-                      validateMemberField(
-                        member.id,
-                        'studentId',
-                        member.educationDetails.studentId,
-                      )
-                    }
-                    placeholder="Student ID"
-                    className={cn(
-                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                      'transition-all duration-200',
-                      errors[member.id]?.studentId
-                        ? 'border-red-500/50 focus-visible:ring-red-500'
-                        : 'border-slate-700 hover:border-slate-600',
-                    )}
-                  />
-                  {errors[member.id]?.studentId && (
-                    <p className="text-sm text-red-400 flex items-center gap-1">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {errors[member.id].studentId}
-                    </p>
-                  )}
-                </div>
+                <InputField
+                  label="University"
+                  required
+                  value={member.educationDetails.university || ''}
+                  onChange={(e) =>
+                    updateMemberEducation(member.id, {
+                      ...member.educationDetails,
+                      university: e.target.value,
+                    })
+                  }
+                  onBlur={() =>
+                    validateMemberField(
+                      member.id,
+                      'university',
+                      member.educationDetails.university,
+                    )
+                  }
+                  placeholder="University"
+                  error={errors[member.id]?.university}
+                />
+                <InputField
+                  label="Faculty"
+                  required
+                  value={member.educationDetails.faculty || ''}
+                  onChange={(e) =>
+                    updateMemberEducation(member.id, {
+                      ...member.educationDetails,
+                      faculty: e.target.value,
+                    })
+                  }
+                  onBlur={() =>
+                    validateMemberField(
+                      member.id,
+                      'faculty',
+                      member.educationDetails.faculty,
+                    )
+                  }
+                  placeholder="Faculty"
+                  error={errors[member.id]?.faculty}
+                />
+                <InputField
+                  label="Student ID"
+                  required
+                  value={member.educationDetails.studentId || ''}
+                  onChange={(e) =>
+                    updateMemberEducation(member.id, {
+                      ...member.educationDetails,
+                      studentId: e.target.value,
+                    })
+                  }
+                  onBlur={() =>
+                    validateMemberField(
+                      member.id,
+                      'studentId',
+                      member.educationDetails.studentId,
+                    )
+                  }
+                  placeholder="Student ID"
+                  error={errors[member.id]?.studentId}
+                />
               </div>
             )}
           </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Leaf, Microscope } from 'lucide-react'
+import { InputField } from './InputField'
 import { RegistrationContinueButton } from './RegistrationContinueButton'
 import { cn } from '@/lib/utils'
 
@@ -46,72 +47,40 @@ export function StepTeamInfo({ onNext, initialData }: StepTeamInfoProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <label
-          htmlFor="teamName"
-          className="text-sm font-semibold text-slate-200"
-        >
-          Team Name <span className="text-aiih-secondary">*</span>
-        </label>
-        <input
-          id="teamName"
-          type="text"
-          value={teamName}
-          onChange={(e) => {
-            setTeamName(e.target.value)
-            if (e.target.value.trim() && e.target.value.length >= 3) {
-              setErrors((prev) => {
-                const next = { ...prev }
-                delete next.teamName
-                return next
-              })
-            }
-          }}
-          onBlur={() => {
-            if (!teamName.trim()) {
-              setErrors((prev) => ({
-                ...prev,
-                teamName: 'Team name is required',
-              }))
-            } else if (teamName.length < 3) {
-              setErrors((prev) => ({
-                ...prev,
-                teamName: 'Team name must be at least 3 characters',
-              }))
-            }
-          }}
-          placeholder="Enter your creative team name"
-          className={cn(
-            'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-            'transition-all duration-200',
-            errors.teamName
-              ? 'border-red-500/50 focus-visible:ring-red-500'
-              : 'border-slate-700 hover:border-slate-600',
-          )}
-        />
-        {errors.teamName && (
-          <p className="text-sm text-red-400 flex items-center gap-1">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {errors.teamName}
-          </p>
-        )}
-      </div>
+      <InputField
+        label="Team Name"
+        htmlFor="teamName"
+        required
+        value={teamName}
+        onChange={(e) => {
+          setTeamName(e.target.value)
+          if (e.target.value.trim() && e.target.value.length >= 3) {
+            setErrors((prev) => {
+              const next = { ...prev }
+              delete next.teamName
+              return next
+            })
+          }
+        }}
+        onBlur={() => {
+          if (!teamName.trim()) {
+            setErrors((prev) => ({
+              ...prev,
+              teamName: 'Team name is required',
+            }))
+          } else if (teamName.length < 3) {
+            setErrors((prev) => ({
+              ...prev,
+              teamName: 'Team name must be at least 3 characters',
+            }))
+          }
+        }}
+        placeholder="Enter your creative team name"
+        error={errors.teamName}
+      />
 
-      <div className="space-y-3">
-        <label className="text-sm font-semibold text-slate-200">
+      <div>
+        <label className="text-sm font-semibold text-slate-200 block mb-3">
           Competition Track <span className="text-aiih-secondary">*</span>
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -183,7 +152,7 @@ export function StepTeamInfo({ onNext, initialData }: StepTeamInfoProps) {
           </div>
         </div>
         {errors.track && (
-          <p className="text-sm text-red-400 flex items-center gap-1">
+          <p className="text-sm text-red-400 flex items-center gap-1 mt-1">
             <svg
               className="w-4 h-4"
               fill="none"

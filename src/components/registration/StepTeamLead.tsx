@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { GraduationCap, Phone, School } from 'lucide-react'
+import { InputField } from './InputField'
+import { SelectField } from './SelectField'
 import { RegistrationBackButton } from './RegistrationBackButton'
 import { RegistrationContinueButton } from './RegistrationContinueButton'
 import { cn } from '@/lib/utils'
@@ -107,73 +109,42 @@ export function StepTeamLead({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label
-          htmlFor="phone"
-          className="text-sm font-semibold text-slate-200 flex items-center gap-2"
-        >
-          <Phone className="w-4 h-4" />
-          Phone Number <span className="text-aiih-secondary">*</span>
-        </label>
-        <input
-          id="phone"
-          type="tel"
-          value={phone}
-          onChange={(e) => {
-            setPhone(e.target.value)
-            if (e.target.value.trim() && validateThaiPhone(e.target.value)) {
-              setErrors((prev) => {
-                const next = { ...prev }
-                delete next.phone
-                return next
-              })
-            }
-          }}
-          onBlur={() => {
-            if (phone.trim() && !validateThaiPhone(phone)) {
-              setErrors((prev) => ({
-                ...prev,
-                phone: 'Please enter a valid Thai phone number',
-              }))
-            } else if (!phone.trim()) {
-              setErrors((prev) => ({
-                ...prev,
-                phone: 'Phone number is required',
-              }))
-            }
-          }}
-          placeholder="0xx-xxx-xxxx"
-          className={cn(
-            'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-            'transition-all duration-200',
-            errors.phone
-              ? 'border-red-500/50 focus-visible:ring-red-500'
-              : 'border-slate-700 hover:border-slate-600',
-          )}
-        />
-        {errors.phone && (
-          <p className="text-sm text-red-400 flex items-center gap-1">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            {errors.phone}
-          </p>
-        )}
-      </div>
+      <InputField
+        label="Phone Number"
+        htmlFor="phone"
+        icon={<Phone className="w-4 h-4" />}
+        required
+        type="tel"
+        value={phone}
+        onChange={(e) => {
+          setPhone(e.target.value)
+          if (e.target.value.trim() && validateThaiPhone(e.target.value)) {
+            setErrors((prev) => {
+              const next = { ...prev }
+              delete next.phone
+              return next
+            })
+          }
+        }}
+        onBlur={() => {
+          if (phone.trim() && !validateThaiPhone(phone)) {
+            setErrors((prev) => ({
+              ...prev,
+              phone: 'Please enter a valid Thai phone number',
+            }))
+          } else if (!phone.trim()) {
+            setErrors((prev) => ({
+              ...prev,
+              phone: 'Phone number is required',
+            }))
+          }
+        }}
+        placeholder="0xx-xxx-xxxx"
+        error={errors.phone}
+      />
 
-      <div className="space-y-3">
-        <label className="text-sm font-semibold text-slate-200">
+      <div>
+        <label className="text-sm font-semibold text-slate-200 block mb-3">
           Education Level <span className="text-aiih-secondary">*</span>
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -241,326 +212,167 @@ export function StepTeamLead({
       </div>
 
       {educationType === 'high_school' ? (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="schoolName"
-              className="text-sm font-semibold text-slate-200"
-            >
-              School Name <span className="text-aiih-secondary">*</span>
-            </label>
-            <input
-              id="schoolName"
-              type="text"
-              value={educationDetails.schoolName || ''}
-              onChange={(e) => {
-                setEducationDetails({
-                  ...educationDetails,
-                  schoolName: e.target.value,
+        <div className="space-y-5">
+          <InputField
+            label="School Name"
+            htmlFor="schoolName"
+            required
+            value={educationDetails.schoolName || ''}
+            onChange={(e) => {
+              setEducationDetails({
+                ...educationDetails,
+                schoolName: e.target.value,
+              })
+              if (e.target.value.trim()) {
+                setErrors((prev) => {
+                  const next = { ...prev }
+                  delete next.schoolName
+                  return next
                 })
-                if (e.target.value.trim()) {
-                  setErrors((prev) => {
-                    const next = { ...prev }
-                    delete next.schoolName
-                    return next
-                  })
-                }
-              }}
-              onBlur={() => {
-                if (!educationDetails.schoolName?.trim()) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    schoolName: 'School name is required',
-                  }))
-                }
-              }}
-              placeholder="Enter your school name"
-              className={cn(
-                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                'transition-all duration-200',
-                errors.schoolName
-                  ? 'border-red-500/50 focus-visible:ring-red-500'
-                  : 'border-slate-700 hover:border-slate-600',
-              )}
-            />
-            {errors.schoolName && (
-              <p className="text-sm text-red-400 flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                {errors.schoolName}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="grade"
-              className="text-sm font-semibold text-slate-200"
-            >
-              Grade <span className="text-aiih-secondary">*</span>
-            </label>
-            <select
-              id="grade"
-              value={educationDetails.grade || ''}
-              onChange={(e) => {
-                setEducationDetails({
-                  ...educationDetails,
-                  grade: e.target.value,
+              }
+            }}
+            onBlur={() => {
+              if (!educationDetails.schoolName?.trim()) {
+                setErrors((prev) => ({
+                  ...prev,
+                  schoolName: 'School name is required',
+                }))
+              }
+            }}
+            placeholder="Enter your school name"
+            error={errors.schoolName}
+          />
+          <SelectField
+            label="Grade"
+            htmlFor="grade"
+            required
+            value={educationDetails.grade || ''}
+            onChange={(e) => {
+              setEducationDetails({
+                ...educationDetails,
+                grade: e.target.value,
+              })
+              if (e.target.value) {
+                setErrors((prev) => {
+                  const next = { ...prev }
+                  delete next.grade
+                  return next
                 })
-                if (e.target.value) {
-                  setErrors((prev) => {
-                    const next = { ...prev }
-                    delete next.grade
-                    return next
-                  })
-                }
-              }}
-              onBlur={() => {
-                if (!educationDetails.grade) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    grade: 'Grade is required',
-                  }))
-                }
-              }}
-              className={cn(
-                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                'transition-all duration-200',
-                errors.grade
-                  ? 'border-red-500/50 focus-visible:ring-red-500'
-                  : 'border-slate-700 hover:border-slate-600',
-              )}
-            >
-              <option value="" className="bg-slate-800">
-                Select grade
-              </option>
-              <option value="M.4" className="bg-slate-800">
-                M.4 (Grade 10)
-              </option>
-              <option value="M.5" className="bg-slate-800">
-                M.5 (Grade 11)
-              </option>
-              <option value="M.6" className="bg-slate-800">
-                M.6 (Grade 12)
-              </option>
-            </select>
-            {errors.grade && (
-              <p className="text-sm text-red-400 flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                {errors.grade}
-              </p>
-            )}
-          </div>
+              }
+            }}
+            onBlur={() => {
+              if (!educationDetails.grade) {
+                setErrors((prev) => ({
+                  ...prev,
+                  grade: 'Grade is required',
+                }))
+              }
+            }}
+            error={errors.grade}
+          >
+            <option value="" className="bg-slate-800">
+              Select grade
+            </option>
+            <option value="M.4" className="bg-slate-800">
+              M.4 (Grade 10)
+            </option>
+            <option value="M.5" className="bg-slate-800">
+              M.5 (Grade 11)
+            </option>
+            <option value="M.6" className="bg-slate-800">
+              M.6 (Grade 12)
+            </option>
+          </SelectField>
         </div>
       ) : (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="university"
-              className="text-sm font-semibold text-slate-200"
-            >
-              University <span className="text-aiih-secondary">*</span>
-            </label>
-            <input
-              id="university"
-              type="text"
-              value={educationDetails.university || ''}
-              onChange={(e) => {
-                setEducationDetails({
-                  ...educationDetails,
-                  university: e.target.value,
+        <div className="space-y-5">
+          <InputField
+            label="University"
+            htmlFor="university"
+            required
+            value={educationDetails.university || ''}
+            onChange={(e) => {
+              setEducationDetails({
+                ...educationDetails,
+                university: e.target.value,
+              })
+              if (e.target.value.trim()) {
+                setErrors((prev) => {
+                  const next = { ...prev }
+                  delete next.university
+                  return next
                 })
-                if (e.target.value.trim()) {
-                  setErrors((prev) => {
-                    const next = { ...prev }
-                    delete next.university
-                    return next
-                  })
-                }
-              }}
-              onBlur={() => {
-                if (!educationDetails.university?.trim()) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    university: 'University name is required',
-                  }))
-                }
-              }}
-              placeholder="Enter your university name"
-              className={cn(
-                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                'transition-all duration-200',
-                errors.university
-                  ? 'border-red-500/50 focus-visible:ring-red-500'
-                  : 'border-slate-700 hover:border-slate-600',
-              )}
-            />
-            {errors.university && (
-              <p className="text-sm text-red-400 flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                {errors.university}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="faculty"
-              className="text-sm font-semibold text-slate-200"
-            >
-              Faculty <span className="text-aiih-secondary">*</span>
-            </label>
-            <input
-              id="faculty"
-              type="text"
-              value={educationDetails.faculty || ''}
-              onChange={(e) => {
-                setEducationDetails({
-                  ...educationDetails,
-                  faculty: e.target.value,
+              }
+            }}
+            onBlur={() => {
+              if (!educationDetails.university?.trim()) {
+                setErrors((prev) => ({
+                  ...prev,
+                  university: 'University name is required',
+                }))
+              }
+            }}
+            placeholder="Enter your university name"
+            error={errors.university}
+          />
+          <InputField
+            label="Faculty"
+            htmlFor="faculty"
+            required
+            value={educationDetails.faculty || ''}
+            onChange={(e) => {
+              setEducationDetails({
+                ...educationDetails,
+                faculty: e.target.value,
+              })
+              if (e.target.value.trim()) {
+                setErrors((prev) => {
+                  const next = { ...prev }
+                  delete next.faculty
+                  return next
                 })
-                if (e.target.value.trim()) {
-                  setErrors((prev) => {
-                    const next = { ...prev }
-                    delete next.faculty
-                    return next
-                  })
-                }
-              }}
-              onBlur={() => {
-                if (!educationDetails.faculty?.trim()) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    faculty: 'Faculty is required',
-                  }))
-                }
-              }}
-              placeholder="Enter your faculty"
-              className={cn(
-                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                'transition-all duration-200',
-                errors.faculty
-                  ? 'border-red-500/50 focus-visible:ring-red-500'
-                  : 'border-slate-700 hover:border-slate-600',
-              )}
-            />
-            {errors.faculty && (
-              <p className="text-sm text-red-400 flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                {errors.faculty}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="studentId"
-              className="text-sm font-semibold text-slate-200"
-            >
-              Student ID <span className="text-aiih-secondary">*</span>
-            </label>
-            <input
-              id="studentId"
-              type="text"
-              value={educationDetails.studentId || ''}
-              onChange={(e) => {
-                setEducationDetails({
-                  ...educationDetails,
-                  studentId: e.target.value,
+              }
+            }}
+            onBlur={() => {
+              if (!educationDetails.faculty?.trim()) {
+                setErrors((prev) => ({
+                  ...prev,
+                  faculty: 'Faculty is required',
+                }))
+              }
+            }}
+            placeholder="Enter your faculty"
+            error={errors.faculty}
+          />
+          <InputField
+            label="Student ID"
+            htmlFor="studentId"
+            required
+            value={educationDetails.studentId || ''}
+            onChange={(e) => {
+              setEducationDetails({
+                ...educationDetails,
+                studentId: e.target.value,
+              })
+              if (e.target.value.trim()) {
+                setErrors((prev) => {
+                  const next = { ...prev }
+                  delete next.studentId
+                  return next
                 })
-                if (e.target.value.trim()) {
-                  setErrors((prev) => {
-                    const next = { ...prev }
-                    delete next.studentId
-                    return next
-                  })
-                }
-              }}
-              onBlur={() => {
-                if (!educationDetails.studentId?.trim()) {
-                  setErrors((prev) => ({
-                    ...prev,
-                    studentId: 'Student ID is required',
-                  }))
-                }
-              }}
-              placeholder="Enter your student ID"
-              className={cn(
-                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
-                'transition-all duration-200',
-                errors.studentId
-                  ? 'border-red-500/50 focus-visible:ring-red-500'
-                  : 'border-slate-700 hover:border-slate-600',
-              )}
-            />
-            {errors.studentId && (
-              <p className="text-sm text-red-400 flex items-center gap-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                {errors.studentId}
-              </p>
-            )}
-          </div>
+              }
+            }}
+            onBlur={() => {
+              if (!educationDetails.studentId?.trim()) {
+                setErrors((prev) => ({
+                  ...prev,
+                  studentId: 'Student ID is required',
+                }))
+              }
+            }}
+            placeholder="Enter your student ID"
+            error={errors.studentId}
+          />
         </div>
       )}
 
