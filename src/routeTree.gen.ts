@@ -16,6 +16,7 @@ import { Route as ChallengeDashboardRouteImport } from './routes/challenge/dashb
 import { Route as ApiTeamGetRouteImport } from './routes/api/team/get'
 import { Route as ApiTeamCreateRouteImport } from './routes/api/team/create'
 import { Route as ApiTeamCheckRegistrationRouteImport } from './routes/api/team/check-registration'
+import { Route as ApiRegistrationStatusRouteImport } from './routes/api/registration/status'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -54,6 +55,11 @@ const ApiTeamCheckRegistrationRoute =
     path: '/api/team/check-registration',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiRegistrationStatusRoute = ApiRegistrationStatusRouteImport.update({
+  id: '/api/registration/status',
+  path: '/api/registration/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/challenge/register': typeof ChallengeRegisterRoute
   '/challenge': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/registration/status': typeof ApiRegistrationStatusRoute
   '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
   '/api/team/create': typeof ApiTeamCreateRoute
   '/api/team/get': typeof ApiTeamGetRoute
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/challenge/register': typeof ChallengeRegisterRoute
   '/challenge': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/registration/status': typeof ApiRegistrationStatusRoute
   '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
   '/api/team/create': typeof ApiTeamCreateRoute
   '/api/team/get': typeof ApiTeamGetRoute
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/challenge/register': typeof ChallengeRegisterRoute
   '/challenge/': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/registration/status': typeof ApiRegistrationStatusRoute
   '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
   '/api/team/create': typeof ApiTeamCreateRoute
   '/api/team/get': typeof ApiTeamGetRoute
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/challenge/register'
     | '/challenge'
     | '/api/auth/$'
+    | '/api/registration/status'
     | '/api/team/check-registration'
     | '/api/team/create'
     | '/api/team/get'
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/challenge/register'
     | '/challenge'
     | '/api/auth/$'
+    | '/api/registration/status'
     | '/api/team/check-registration'
     | '/api/team/create'
     | '/api/team/get'
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/challenge/register'
     | '/challenge/'
     | '/api/auth/$'
+    | '/api/registration/status'
     | '/api/team/check-registration'
     | '/api/team/create'
     | '/api/team/get'
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   ChallengeRegisterRoute: typeof ChallengeRegisterRoute
   ChallengeIndexRoute: typeof ChallengeIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiRegistrationStatusRoute: typeof ApiRegistrationStatusRoute
   ApiTeamCheckRegistrationRoute: typeof ApiTeamCheckRegistrationRoute
   ApiTeamCreateRoute: typeof ApiTeamCreateRoute
   ApiTeamGetRoute: typeof ApiTeamGetRoute
@@ -186,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTeamCheckRegistrationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/registration/status': {
+      id: '/api/registration/status'
+      path: '/api/registration/status'
+      fullPath: '/api/registration/status'
+      preLoaderRoute: typeof ApiRegistrationStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChallengeRegisterRoute: ChallengeRegisterRoute,
   ChallengeIndexRoute: ChallengeIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiRegistrationStatusRoute: ApiRegistrationStatusRoute,
   ApiTeamCheckRegistrationRoute: ApiTeamCheckRegistrationRoute,
   ApiTeamCreateRoute: ApiTeamCreateRoute,
   ApiTeamGetRoute: ApiTeamGetRoute,

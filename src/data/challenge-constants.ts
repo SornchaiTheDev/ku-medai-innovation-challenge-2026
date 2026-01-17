@@ -7,7 +7,8 @@ export const challengeConstants = {
     'Unlock the power of Artificial Intelligence to revolutionize Thai Healthcare and Agro-Medicine. Pitch your idea, build a prototype, and win total prizes over 65,000 THB.',
 
   dates: {
-    registrationOpen: 'January 26, 2026',
+    registrationOpen: 'January 26, 2026 00:00:00',
+    registrationClose: 'Febuary 7, 2026 23:59:59',
     finalPitch: 'March 7, 2026',
   },
 

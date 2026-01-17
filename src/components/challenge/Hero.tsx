@@ -85,6 +85,40 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
 }
 
 export default function Hero() {
+  const [registrationStatus, setRegistrationStatus] = useState<{
+    isAvailable: boolean
+    isClosed: boolean
+    isLoading: boolean
+  }>({ isAvailable: false, isClosed: false, isLoading: true })
+
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      try {
+        const response = await fetch('/api/registration/status')
+        const data = await response.json()
+        setRegistrationStatus({
+          isAvailable: data.isAvailable,
+          isClosed:
+            !data.isAvailable &&
+            new Date(data.now) > new Date(data.registrationCloseDate),
+          isLoading: false,
+        })
+      } catch (error) {
+        console.error('Failed to check registration status:', error)
+        setRegistrationStatus({
+          isAvailable: false,
+          isClosed: false,
+          isLoading: false,
+        })
+      }
+    }
+
+    checkRegistrationStatus()
+  }, [])
+
+  const handleJoinChallenge = () => {
+    window.location.href = '/challenge/register'
+  }
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900">
@@ -133,28 +167,40 @@ export default function Hero() {
           </p>
         </FadeContent>
 
-        <CountdownTimer targetDate="January 26, 2026" />
+        <CountdownTimer
+          targetDate={challengeConstants.dates.registrationOpen}
+        />
 
-        <div className="mt-8">
-          <AnimatedContent
-            distance={30}
-            duration={0.6}
-            delay={900}
-            ease="back.out(1.2)"
-          >
-            <StarBorder
-              as="button"
-              color="#50d8af"
-              speed="4s"
-              thickness={2}
-              variant="emerald"
-              className="font-semibold text-lg"
-              onClick={() => alert('Registration coming soon!')}
+        {!registrationStatus.isClosed && (
+          <div className="mt-8">
+            <AnimatedContent
+              distance={30}
+              duration={0.6}
+              delay={900}
+              ease="back.out(1.2)"
             >
-              Join the Challenge
-            </StarBorder>
-          </AnimatedContent>
-        </div>
+              <StarBorder
+                as="button"
+                color="#50d8af"
+                speed="4s"
+                thickness={2}
+                variant="emerald"
+                className="font-semibold text-lg"
+                onClick={handleJoinChallenge}
+                disabled={
+                  registrationStatus.isLoading ||
+                  !registrationStatus.isAvailable
+                }
+              >
+                {registrationStatus.isLoading
+                  ? 'Loading...'
+                  : registrationStatus.isAvailable
+                    ? 'Join the Challenge'
+                    : 'Registration Coming Soon'}
+              </StarBorder>
+            </AnimatedContent>
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-slate-900 via-slate-900/85 to-transparent" />
