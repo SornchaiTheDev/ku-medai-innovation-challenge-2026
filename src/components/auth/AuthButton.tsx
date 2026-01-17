@@ -2,22 +2,30 @@
 
 import { createAuthClient } from 'better-auth/client'
 import { Chrome } from 'lucide-react'
+import StarBorder from '@/components/StarBorder'
 
 const authClient = createAuthClient()
 
 export function AuthButton() {
   return (
-    <button
+    <StarBorder
+      as="button"
+      color="#34d399"
+      speed="4s"
+      thickness={2}
+      variant="emerald"
+      className="font-semibold text-lg cursor-pointer"
       onClick={() =>
         authClient.signIn.social({
           provider: 'google',
           callbackURL: '/challenge/register',
         })
       }
-      className="w-full gap-2 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white"
     >
-      <Chrome className="h-5 w-5" />
-      Continue with Google
-    </button>
+      <div className="flex items-center gap-2">
+        <Chrome className="h-5 w-5" />
+        Continue with Google
+      </div>
+    </StarBorder>
   )
 }

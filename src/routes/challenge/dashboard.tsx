@@ -68,7 +68,7 @@ function DashboardPage() {
 
   const handleSignOut = async () => {
     await authClient.signOut()
-    window.location.href = '/'
+    window.location.href = '/challenge'
   }
 
   if (isLoading) {
@@ -131,7 +131,7 @@ function DashboardPage() {
             </div>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-800/70 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               Sign Out

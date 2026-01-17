@@ -16,6 +16,8 @@ import { StepConsent } from '@/components/registration/StepConsent'
 import { RegistrationSummary } from '@/components/registration/RegistrationSummary'
 import { cn } from '@/lib/utils'
 import AnimatedContent from '@/components/AnimatedContent'
+import BlurText from '@/components/BlurText'
+import FadeContent from '@/components/FadeContent'
 
 export const Route = createFileRoute('/challenge/register')({
   component: RegisterPage,
@@ -113,7 +115,7 @@ function RegisterPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-aiih-secondary mx-auto"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-400 mx-auto"></div>
           <p className="mt-4 text-slate-400">Loading...</p>
         </div>
       </div>
@@ -122,59 +124,91 @@ function RegisterPage() {
 
   if (isAlreadyRegistered) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
-        <AnimatedContent
-          direction="vertical"
-          distance={30}
-          duration={0.5}
-          className="w-full max-w-md text-center"
-        >
-          <div className="mb-8">
-            <div className="w-20 h-20 bg-aiih-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 className="w-10 h-10 text-aiih-secondary" />
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 py-20 text-center">
+          <AnimatedContent
+            direction="vertical"
+            distance={30}
+            duration={0.5}
+            className="text-center"
+          >
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-emerald-500/20 mb-6 border border-emerald-500/30">
+              <CheckCircle2 className="w-10 h-10 text-emerald-400" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-bold text-white mb-4">
               You're Already Registered!
             </h1>
-            <p className="text-slate-400 text-lg">
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-8">
               Your team is all set for the KU MedAI Innovation Challenge 2026
             </p>
-          </div>
-          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-8 shadow-2xl">
             <Link
               to="/challenge/dashboard"
-              className="inline-flex items-center justify-center w-full py-3 px-4 bg-aiih-secondary hover:bg-aiih-secondary/90 text-aiih-primary font-semibold rounded-lg transition-colors"
+              className="inline-flex items-center justify-center py-3 px-6 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-colors"
             >
               Go to Dashboard
             </Link>
-          </div>
-        </AnimatedContent>
-      </div>
+          </AnimatedContent>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-slate-900 via-slate-900/85 to-transparent" />
+      </section>
     )
   }
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
-        <AnimatedContent
-          direction="vertical"
-          distance={30}
-          duration={0.5}
-          className="w-full max-w-md"
-        >
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Join the Challenge
-            </h1>
-            <p className="text-aiih-secondary text-lg">
-              Sign in to register your team
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900">
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-4 py-20 text-center">
+          <FadeContent duration={800} delay={300}>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-10 border border-white/20">
+              <Users className="w-4 h-4 text-emerald-400" />
+              <span className="text-sm text-white/90">
+                Sign in to register your team
+              </span>
+            </div>
+          </FadeContent>
+
+          <div className="text-3xl md:text-4xl xl:text-6xl font-bold text-white mb-8 md:mb-10 tracking-tight">
+            <BlurText
+              text="Join the Challenge"
+              className="text-white inline"
+              delay={100}
+              animateBy="words"
+              stepDuration={0.4}
+            />
+          </div>
+
+          <FadeContent duration={800} delay={600}>
+            <p className="text-base md:text-xl text-slate-300 max-w-2xl mx-auto mb-10">
+              Sign in to register your team for the KU MedAI Innovation
+              Challenge 2026
             </p>
+          </FadeContent>
+
+          <div className="mt-8">
+            <AnimatedContent
+              distance={30}
+              duration={0.6}
+              delay={900}
+              ease="back.out(1.2)"
+            >
+              <AuthButton />
+            </AnimatedContent>
           </div>
-          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-8 shadow-2xl">
-            <AuthButton />
-          </div>
-        </AnimatedContent>
-      </div>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-slate-900 via-slate-900/85 to-transparent" />
+      </section>
     )
   }
 
