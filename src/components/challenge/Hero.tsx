@@ -1,4 +1,3 @@
-import { Calendar } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { challengeConstants } from '@/data/challenge-constants'
 import AnimatedContent from '@/components/AnimatedContent'
@@ -7,6 +6,13 @@ import FadeContent from '@/components/FadeContent'
 import StarBorder from '@/components/StarBorder'
 import TextType from '@/components/TextType'
 import { cn } from '@/lib/utils'
+
+interface RegistrationStatus {
+  isAvailable: boolean
+  isOpened: boolean
+  isClosed: boolean
+  isLoading: boolean
+}
 
 interface TimeLeft {
   days: number
@@ -85,41 +91,15 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
   )
 }
 
-export default function Hero() {
-  const [registrationStatus, setRegistrationStatus] = useState<{
-    isAvailable: boolean
-    isClosed: boolean
-    isLoading: boolean
-  }>({ isAvailable: false, isClosed: false, isLoading: true })
-
-  useEffect(() => {
-    const checkRegistrationStatus = async () => {
-      try {
-        const response = await fetch('/api/registration/status')
-        const data = await response.json()
-        setRegistrationStatus({
-          isAvailable: data.isAvailable,
-          isClosed:
-            !data.isAvailable &&
-            new Date(data.now) > new Date(data.registrationCloseDate),
-          isLoading: false,
-        })
-      } catch (error) {
-        console.error('Failed to check registration status:', error)
-        setRegistrationStatus({
-          isAvailable: false,
-          isClosed: false,
-          isLoading: false,
-        })
-      }
-    }
-
-    checkRegistrationStatus()
-  }, [])
-
+export default function Hero({
+  registrationStatus,
+}: {
+  registrationStatus: RegistrationStatus
+}) {
   const handleJoinChallenge = () => {
     window.location.href = '/challenge/register'
   }
+  console.log(registrationStatus)
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900">
@@ -128,7 +108,6 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-
         <div className="text-3xl md:text-4xl xl:text-6xl font-bold text-white mb-8 md:mb-10 tracking-tight space-y-4">
           <TextType
             text={challengeConstants.headline}
@@ -152,9 +131,11 @@ export default function Hero() {
           </p>
         </FadeContent>
 
-        <CountdownTimer
-          targetDate={challengeConstants.dates.registrationOpen}
-        />
+        {!registrationStatus.isOpened && (
+          <CountdownTimer
+            targetDate={challengeConstants.dates.registrationOpen}
+          />
+        )}
 
         {!registrationStatus.isClosed && (
           <div className="mt-8">
