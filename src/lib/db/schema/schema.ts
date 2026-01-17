@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, pgEnum } from 'drizzle-orm/pg-core'
+import { pgEnum, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const educationTypeEnum = pgEnum('education_type', [

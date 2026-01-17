@@ -1,7 +1,7 @@
+import { createFileRoute } from '@tanstack/react-router'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { teams, profiles } from '@/lib/db/schema/schema'
-import { createFileRoute } from '@tanstack/react-router'
+import { profiles, teams } from '@/lib/db/schema/schema'
 
 export const Route = createFileRoute('/api/team/get')({
   server: {

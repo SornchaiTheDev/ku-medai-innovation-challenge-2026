@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { GraduationCap, Phone, Plus, School, Trash2, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Trash2, Plus } from 'lucide-react'
+import { RegistrationBackButton } from './RegistrationBackButton'
+import { RegistrationContinueButton } from './RegistrationContinueButton'
 
 interface TeamMemberData {
   id: string
@@ -35,9 +37,9 @@ export interface MemberOutput {
 }
 
 interface StepTeamMembersProps {
-  onNext: (members: MemberOutput[]) => void
+  onNext: (members: Array<MemberOutput>) => void
   onBack: () => void
-  initialMembers?: MemberOutput[]
+  initialMembers?: Array<MemberOutput>
 }
 
 export function StepTeamMembers({
@@ -45,7 +47,7 @@ export function StepTeamMembers({
   onBack,
   initialMembers = [],
 }: StepTeamMembersProps) {
-  const [members, setMembers] = useState<TeamMemberData[]>(
+  const [members, setMembers] = useState<Array<TeamMemberData>>(
     initialMembers.map((m) => ({ ...m, id: crypto.randomUUID() })),
   )
   const [errors, setErrors] = useState<Record<string, Record<string, string>>>(
@@ -168,8 +170,8 @@ export function StepTeamMembers({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-medium">Team Members</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="text-lg font-semibold text-white">Team Members</h3>
+          <p className="text-sm text-slate-400">
             Add 2-4 members (team will have 3-5 people including you)
           </p>
         </div>
@@ -179,6 +181,7 @@ export function StepTeamMembers({
           size="sm"
           onClick={addMember}
           disabled={members.length >= 4}
+          className="border-slate-500 bg-slate-700 text-white hover:bg-slate-600 hover:text-aiih-secondary"
         >
           <Plus className="h-4 w-4 mr-1" />
           Add Member
@@ -186,21 +189,36 @@ export function StepTeamMembers({
       </div>
 
       {members.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          No team members added yet. Click "Add Member" to add your first
-          member.
+        <div className="text-center py-12 border-2 border-dashed border-slate-700 rounded-xl">
+          <User className="h-12 w-12 mx-auto text-slate-600 mb-3" />
+          <p className="text-slate-400 mb-2">No team members added yet</p>
+          <p className="text-sm text-slate-500">
+            Click "Add Member" to add your first member
+          </p>
         </div>
       )}
 
       <div className="space-y-4">
         {members.map((member, index) => (
-          <div key={member.id} className="rounded-lg border p-4 space-y-4">
+          <div
+            key={member.id}
+            className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-5 space-y-4"
+          >
             <div className="flex items-center justify-between">
-              <span className="font-medium">Member {index + 1}</span>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-aiih-secondary/20 flex items-center justify-center">
+                  <span className="text-sm font-medium text-aiih-secondary">
+                    {index + 1}
+                  </span>
+                </div>
+                <span className="font-medium text-white">
+                  Member {index + 1}
+                </span>
+              </div>
               <button
                 type="button"
                 onClick={() => removeMember(member.id)}
-                className="text-red-500 hover:text-red-700"
+                className="text-slate-500 hover:text-red-400 transition-colors p-1 rounded-lg hover:bg-red-500/10"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -208,7 +226,10 @@ export function StepTeamMembers({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Full Name *</label>
+                <label className="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Full Name <span className="text-aiih-secondary">*</span>
+                </label>
                 <input
                   type="text"
                   value={member.name}
@@ -216,16 +237,39 @@ export function StepTeamMembers({
                     updateMember(member.id, 'name', e.target.value)
                   }
                   placeholder="Thai and English name"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className={cn(
+                    'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                    'transition-all duration-200',
+                    errors[member.id]?.name
+                      ? 'border-red-500/50 focus-visible:ring-red-500'
+                      : 'border-slate-700 hover:border-slate-600',
+                  )}
                 />
                 {errors[member.id]?.name && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-red-400 flex items-center gap-1">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
                     {errors[member.id].name}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Phone *</label>
+                <label className="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  Phone <span className="text-aiih-secondary">*</span>
+                </label>
                 <input
                   type="tel"
                   value={member.phone}
@@ -233,10 +277,30 @@ export function StepTeamMembers({
                     updateMember(member.id, 'phone', e.target.value)
                   }
                   placeholder="0xx-xxx-xxxx"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  className={cn(
+                    'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                    'transition-all duration-200',
+                    errors[member.id]?.phone
+                      ? 'border-red-500/50 focus-visible:ring-red-500'
+                      : 'border-slate-700 hover:border-slate-600',
+                  )}
                 />
                 {errors[member.id]?.phone && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-red-400 flex items-center gap-1">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
                     {errors[member.id].phone}
                   </p>
                 )}
@@ -244,7 +308,9 @@ export function StepTeamMembers({
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-medium">Education Level *</label>
+              <label className="text-sm font-semibold text-slate-200">
+                Education Level <span className="text-aiih-secondary">*</span>
+              </label>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div
                   onClick={() => {
@@ -252,13 +318,28 @@ export function StepTeamMembers({
                     updateMemberEducation(member.id, { type: 'high_school' })
                   }}
                   className={cn(
-                    'cursor-pointer rounded-lg border-2 p-3 transition-all',
+                    'cursor-pointer rounded-lg border-2 p-3 transition-all duration-300',
+                    'hover:scale-[1.02]',
                     member.educationType === 'high_school'
-                      ? 'border-primary bg-accent'
-                      : 'border-border',
+                      ? 'border-aiih-secondary bg-aiih-secondary/10'
+                      : 'border-slate-700 bg-slate-800/50 hover:border-slate-600',
                   )}
                 >
-                  <div className="font-medium text-sm">High School</div>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={cn(
+                        'w-8 h-8 rounded-full flex items-center justify-center',
+                        member.educationType === 'high_school'
+                          ? 'bg-aiih-secondary text-aiih-primary'
+                          : 'bg-slate-700 text-slate-300',
+                      )}
+                    >
+                      <School className="w-4 h-4" />
+                    </div>
+                    <div className="font-medium text-sm text-white">
+                      High School
+                    </div>
+                  </div>
                 </div>
                 <div
                   onClick={() => {
@@ -266,13 +347,28 @@ export function StepTeamMembers({
                     updateMemberEducation(member.id, { type: 'university' })
                   }}
                   className={cn(
-                    'cursor-pointer rounded-lg border-2 p-3 transition-all',
+                    'cursor-pointer rounded-lg border-2 p-3 transition-all duration-300',
+                    'hover:scale-[1.02]',
                     member.educationType === 'university'
-                      ? 'border-primary bg-accent'
-                      : 'border-border',
+                      ? 'border-aiih-secondary bg-aiih-secondary/10'
+                      : 'border-slate-700 bg-slate-800/50 hover:border-slate-600',
                   )}
                 >
-                  <div className="font-medium text-sm">University</div>
+                  <div className="flex items-center gap-2">
+                    <div
+                      className={cn(
+                        'w-8 h-8 rounded-full flex items-center justify-center',
+                        member.educationType === 'university'
+                          ? 'bg-aiih-secondary text-aiih-primary'
+                          : 'bg-slate-700 text-slate-300',
+                      )}
+                    >
+                      <GraduationCap className="w-4 h-4" />
+                    </div>
+                    <div className="font-medium text-sm text-white">
+                      University
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -280,7 +376,9 @@ export function StepTeamMembers({
             {member.educationType === 'high_school' ? (
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">School Name *</label>
+                  <label className="text-sm font-semibold text-slate-200">
+                    School Name <span className="text-aiih-secondary">*</span>
+                  </label>
                   <input
                     type="text"
                     value={member.educationDetails.schoolName || ''}
@@ -291,16 +389,38 @@ export function StepTeamMembers({
                       })
                     }
                     placeholder="School name"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className={cn(
+                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                      'transition-all duration-200',
+                      errors[member.id]?.schoolName
+                        ? 'border-red-500/50 focus-visible:ring-red-500'
+                        : 'border-slate-700 hover:border-slate-600',
+                    )}
                   />
                   {errors[member.id]?.schoolName && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-red-400 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       {errors[member.id].schoolName}
                     </p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Grade *</label>
+                  <label className="text-sm font-semibold text-slate-200">
+                    Grade <span className="text-aiih-secondary">*</span>
+                  </label>
                   <select
                     value={member.educationDetails.grade || ''}
                     onChange={(e) =>
@@ -309,15 +429,43 @@ export function StepTeamMembers({
                         grade: e.target.value,
                       })
                     }
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className={cn(
+                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                      'transition-all duration-200',
+                      errors[member.id]?.grade
+                        ? 'border-red-500/50 focus-visible:ring-red-500'
+                        : 'border-slate-700 hover:border-slate-600',
+                    )}
                   >
-                    <option value="">Select grade</option>
-                    <option value="M.4">M.4</option>
-                    <option value="M.5">M.5</option>
-                    <option value="M.6">M.6</option>
+                    <option value="" className="bg-slate-800">
+                      Select grade
+                    </option>
+                    <option value="M.4" className="bg-slate-800">
+                      M.4
+                    </option>
+                    <option value="M.5" className="bg-slate-800">
+                      M.5
+                    </option>
+                    <option value="M.6" className="bg-slate-800">
+                      M.6
+                    </option>
                   </select>
                   {errors[member.id]?.grade && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-red-400 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       {errors[member.id].grade}
                     </p>
                   )}
@@ -326,7 +474,9 @@ export function StepTeamMembers({
             ) : (
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">University *</label>
+                  <label className="text-sm font-semibold text-slate-200">
+                    University <span className="text-aiih-secondary">*</span>
+                  </label>
                   <input
                     type="text"
                     value={member.educationDetails.university || ''}
@@ -337,16 +487,38 @@ export function StepTeamMembers({
                       })
                     }
                     placeholder="University"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className={cn(
+                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                      'transition-all duration-200',
+                      errors[member.id]?.university
+                        ? 'border-red-500/50 focus-visible:ring-red-500'
+                        : 'border-slate-700 hover:border-slate-600',
+                    )}
                   />
                   {errors[member.id]?.university && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-red-400 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       {errors[member.id].university}
                     </p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Faculty *</label>
+                  <label className="text-sm font-semibold text-slate-200">
+                    Faculty <span className="text-aiih-secondary">*</span>
+                  </label>
                   <input
                     type="text"
                     value={member.educationDetails.faculty || ''}
@@ -357,16 +529,38 @@ export function StepTeamMembers({
                       })
                     }
                     placeholder="Faculty"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className={cn(
+                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                      'transition-all duration-200',
+                      errors[member.id]?.faculty
+                        ? 'border-red-500/50 focus-visible:ring-red-500'
+                        : 'border-slate-700 hover:border-slate-600',
+                    )}
                   />
                   {errors[member.id]?.faculty && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-red-400 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       {errors[member.id].faculty}
                     </p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Student ID *</label>
+                  <label className="text-sm font-semibold text-slate-200">
+                    Student ID <span className="text-aiih-secondary">*</span>
+                  </label>
                   <input
                     type="text"
                     value={member.educationDetails.studentId || ''}
@@ -377,10 +571,30 @@ export function StepTeamMembers({
                       })
                     }
                     placeholder="Student ID"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    className={cn(
+                      'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                      'transition-all duration-200',
+                      errors[member.id]?.studentId
+                        ? 'border-red-500/50 focus-visible:ring-red-500'
+                        : 'border-slate-700 hover:border-slate-600',
+                    )}
                   />
                   {errors[member.id]?.studentId && (
-                    <p className="text-sm text-red-500">
+                    <p className="text-sm text-red-400 flex items-center gap-1">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       {errors[member.id].studentId}
                     </p>
                   )}
@@ -392,17 +606,8 @@ export function StepTeamMembers({
       </div>
 
       <div className="flex gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onBack}
-          className="flex-1"
-        >
-          Back
-        </Button>
-        <Button type="submit" className="flex-1">
-          Continue
-        </Button>
+        <RegistrationBackButton onClick={onBack} />
+        <RegistrationContinueButton type="submit" />
       </div>
     </form>
   )

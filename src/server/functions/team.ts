@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { db } from '@/lib/db'
-import { profiles, teams, teamMembers } from '@/lib/db/schema/schema'
+import { profiles, teamMembers, teams } from '@/lib/db/schema/schema'
 import { auth } from '@/lib/auth'
 
 const educationDetailsSchema = z.union([
@@ -32,7 +32,7 @@ export const createTeam = async (input: {
     educationType: 'high_school' | 'university'
     educationDetails: z.infer<typeof educationDetailsSchema>
   }
-  members: z.infer<typeof teamMemberInputSchema>[]
+  members: Array<z.infer<typeof teamMemberInputSchema>>
 }) => {
   const session = await auth.api.getSession({
     headers: new Headers(),

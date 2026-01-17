@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createAuthClient } from 'better-auth/client'
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardPage,

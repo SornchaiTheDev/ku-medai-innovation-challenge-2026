@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { GraduationCap, Phone, School } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { RegistrationBackButton } from './RegistrationBackButton'
+import { RegistrationContinueButton } from './RegistrationContinueButton'
 
 interface EducationDetails {
   type: 'high_school' | 'university'
@@ -20,6 +22,7 @@ interface StepTeamLeadProps {
     educationType: 'high_school' | 'university'
     educationDetails: EducationDetails
   }) => void
+  onBack: () => void
   initialData?: {
     phone: string
     educationType: 'high_school' | 'university'
@@ -27,7 +30,12 @@ interface StepTeamLeadProps {
   }
 }
 
-export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
+export function StepTeamLead({
+  user,
+  onNext,
+  onBack,
+  initialData,
+}: StepTeamLeadProps) {
   const [phone, setPhone] = useState(initialData?.phone || '')
   const [educationType, setEducationType] = useState<
     'high_school' | 'university'
@@ -81,23 +89,30 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="flex items-center gap-4 rounded-lg border p-4">
+      <div className="flex items-center gap-4 rounded-xl border border-slate-700/50 bg-slate-800/30 p-4">
         {user.image && (
           <img
             src={user.image}
             alt={user.name}
-            className="h-12 w-12 rounded-full"
+            className="h-12 w-12 rounded-full border-2 border-aiih-secondary"
           />
         )}
         <div>
-          <div className="font-medium">{user.name}</div>
-          <div className="text-sm text-muted-foreground">{user.email}</div>
+          <div className="font-semibold text-white">{user.name}</div>
+          <div className="text-sm text-slate-400">{user.email}</div>
+        </div>
+        <div className="ml-auto px-3 py-1 rounded-full bg-aiih-secondary/10 text-aiih-secondary text-xs font-medium">
+          Team Lead
         </div>
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="phone" className="text-sm font-medium leading-none">
-          Phone Number (Thai) *
+        <label
+          htmlFor="phone"
+          className="text-sm font-semibold text-slate-200 flex items-center gap-2"
+        >
+          <Phone className="w-4 h-4" />
+          Phone Number <span className="text-aiih-secondary">*</span>
         </label>
         <input
           id="phone"
@@ -105,14 +120,38 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="0xx-xxx-xxxx"
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className={cn(
+            'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+            'transition-all duration-200',
+            errors.phone
+              ? 'border-red-500/50 focus-visible:ring-red-500'
+              : 'border-slate-700 hover:border-slate-600',
+          )}
         />
-        {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
+        {errors.phone && (
+          <p className="text-sm text-red-400 flex items-center gap-1">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            {errors.phone}
+          </p>
+        )}
       </div>
 
       <div className="space-y-3">
-        <label className="text-sm font-medium leading-none">
-          Education Level *
+        <label className="text-sm font-semibold text-slate-200">
+          Education Level <span className="text-aiih-secondary">*</span>
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <div
@@ -121,14 +160,29 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
               setEducationDetails({ type: 'high_school' })
             }}
             className={cn(
-              'cursor-pointer rounded-lg border-2 p-4 transition-all',
+              'cursor-pointer rounded-xl border-2 p-4 transition-all duration-300',
+              'hover:scale-[1.02]',
               educationType === 'high_school'
-                ? 'border-primary bg-accent'
-                : 'border-border',
+                ? 'border-aiih-secondary bg-aiih-secondary/10'
+                : 'border-slate-700 bg-slate-800/50 hover:border-slate-600',
             )}
           >
-            <div className="font-medium">High School</div>
-            <div className="text-xs text-muted-foreground">M.4 - M.6</div>
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  'w-10 h-10 rounded-full flex items-center justify-center',
+                  educationType === 'high_school'
+                    ? 'bg-aiih-secondary text-aiih-primary'
+                    : 'bg-slate-700 text-slate-300',
+                )}
+              >
+                <School className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="font-medium text-white">High School</div>
+                <div className="text-xs text-slate-400">M.4 - M.6</div>
+              </div>
+            </div>
           </div>
           <div
             onClick={() => {
@@ -136,14 +190,29 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
               setEducationDetails({ type: 'university' })
             }}
             className={cn(
-              'cursor-pointer rounded-lg border-2 p-4 transition-all',
+              'cursor-pointer rounded-xl border-2 p-4 transition-all duration-300',
+              'hover:scale-[1.02]',
               educationType === 'university'
-                ? 'border-primary bg-accent'
-                : 'border-border',
+                ? 'border-aiih-secondary bg-aiih-secondary/10'
+                : 'border-slate-700 bg-slate-800/50 hover:border-slate-600',
             )}
           >
-            <div className="font-medium">University</div>
-            <div className="text-xs text-muted-foreground">Undergraduate</div>
+            <div className="flex items-center gap-3">
+              <div
+                className={cn(
+                  'w-10 h-10 rounded-full flex items-center justify-center',
+                  educationType === 'university'
+                    ? 'bg-aiih-secondary text-aiih-primary'
+                    : 'bg-slate-700 text-slate-300',
+                )}
+              >
+                <GraduationCap className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="font-medium text-white">University</div>
+                <div className="text-xs text-slate-400">Undergraduate</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -153,9 +222,9 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
           <div className="space-y-2">
             <label
               htmlFor="schoolName"
-              className="text-sm font-medium leading-none"
+              className="text-sm font-semibold text-slate-200"
             >
-              School Name *
+              School Name <span className="text-aiih-secondary">*</span>
             </label>
             <input
               id="schoolName"
@@ -168,15 +237,40 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
                 })
               }
               placeholder="Enter your school name"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={cn(
+                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                'transition-all duration-200',
+                errors.schoolName
+                  ? 'border-red-500/50 focus-visible:ring-red-500'
+                  : 'border-slate-700 hover:border-slate-600',
+              )}
             />
             {errors.schoolName && (
-              <p className="text-sm text-red-500">{errors.schoolName}</p>
+              <p className="text-sm text-red-400 flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                {errors.schoolName}
+              </p>
             )}
           </div>
           <div className="space-y-2">
-            <label htmlFor="grade" className="text-sm font-medium leading-none">
-              Grade *
+            <label
+              htmlFor="grade"
+              className="text-sm font-semibold text-slate-200"
+            >
+              Grade <span className="text-aiih-secondary">*</span>
             </label>
             <select
               id="grade"
@@ -187,15 +281,45 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
                   grade: e.target.value,
                 })
               }
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className={cn(
+                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                'transition-all duration-200',
+                errors.grade
+                  ? 'border-red-500/50 focus-visible:ring-red-500'
+                  : 'border-slate-700 hover:border-slate-600',
+              )}
             >
-              <option value="">Select grade</option>
-              <option value="M.4">M.4 (Grade 10)</option>
-              <option value="M.5">M.5 (Grade 11)</option>
-              <option value="M.6">M.6 (Grade 12)</option>
+              <option value="" className="bg-slate-800">
+                Select grade
+              </option>
+              <option value="M.4" className="bg-slate-800">
+                M.4 (Grade 10)
+              </option>
+              <option value="M.5" className="bg-slate-800">
+                M.5 (Grade 11)
+              </option>
+              <option value="M.6" className="bg-slate-800">
+                M.6 (Grade 12)
+              </option>
             </select>
             {errors.grade && (
-              <p className="text-sm text-red-500">{errors.grade}</p>
+              <p className="text-sm text-red-400 flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                {errors.grade}
+              </p>
             )}
           </div>
         </div>
@@ -204,9 +328,9 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
           <div className="space-y-2">
             <label
               htmlFor="university"
-              className="text-sm font-medium leading-none"
+              className="text-sm font-semibold text-slate-200"
             >
-              University *
+              University <span className="text-aiih-secondary">*</span>
             </label>
             <input
               id="university"
@@ -219,18 +343,40 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
                 })
               }
               placeholder="Enter your university name"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={cn(
+                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                'transition-all duration-200',
+                errors.university
+                  ? 'border-red-500/50 focus-visible:ring-red-500'
+                  : 'border-slate-700 hover:border-slate-600',
+              )}
             />
             {errors.university && (
-              <p className="text-sm text-red-500">{errors.university}</p>
+              <p className="text-sm text-red-400 flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                {errors.university}
+              </p>
             )}
           </div>
           <div className="space-y-2">
             <label
               htmlFor="faculty"
-              className="text-sm font-medium leading-none"
+              className="text-sm font-semibold text-slate-200"
             >
-              Faculty *
+              Faculty <span className="text-aiih-secondary">*</span>
             </label>
             <input
               id="faculty"
@@ -243,18 +389,40 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
                 })
               }
               placeholder="Enter your faculty"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={cn(
+                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                'transition-all duration-200',
+                errors.faculty
+                  ? 'border-red-500/50 focus-visible:ring-red-500'
+                  : 'border-slate-700 hover:border-slate-600',
+              )}
             />
             {errors.faculty && (
-              <p className="text-sm text-red-500">{errors.faculty}</p>
+              <p className="text-sm text-red-400 flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                {errors.faculty}
+              </p>
             )}
           </div>
           <div className="space-y-2">
             <label
               htmlFor="studentId"
-              className="text-sm font-medium leading-none"
+              className="text-sm font-semibold text-slate-200"
             >
-              Student ID *
+              Student ID <span className="text-aiih-secondary">*</span>
             </label>
             <input
               id="studentId"
@@ -267,18 +435,41 @@ export function StepTeamLead({ user, onNext, initialData }: StepTeamLeadProps) {
                 })
               }
               placeholder="Enter your student ID"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={cn(
+                'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
+                'transition-all duration-200',
+                errors.studentId
+                  ? 'border-red-500/50 focus-visible:ring-red-500'
+                  : 'border-slate-700 hover:border-slate-600',
+              )}
             />
             {errors.studentId && (
-              <p className="text-sm text-red-500">{errors.studentId}</p>
+              <p className="text-sm text-red-400 flex items-center gap-1">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                {errors.studentId}
+              </p>
             )}
           </div>
         </div>
       )}
 
-      <Button type="submit" className="w-full">
-        Continue
-      </Button>
+      <div className="flex gap-4">
+        <RegistrationBackButton onClick={onBack} />
+        <RegistrationContinueButton type="submit" />
+      </div>
     </form>
   )
 }

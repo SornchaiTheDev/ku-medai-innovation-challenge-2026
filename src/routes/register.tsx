@@ -1,12 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { createAuthClient } from 'better-auth/client'
+import { useEffect, useState } from 'react'
+import {
+  CheckCircle2,
+  ClipboardCheck,
+  ShieldCheck,
+  UserCog,
+  Users,
+} from 'lucide-react'
 import { AuthButton } from '@/components/auth/AuthButton'
 import { StepTeamInfo } from '@/components/registration/StepTeamInfo'
 import { StepTeamLead } from '@/components/registration/StepTeamLead'
 import { StepTeamMembers } from '@/components/registration/StepTeamMembers'
 import { StepConsent } from '@/components/registration/StepConsent'
 import { RegistrationSummary } from '@/components/registration/RegistrationSummary'
-import { useEffect, useState } from 'react'
+import { cn } from '@/lib/utils'
+import AnimatedContent from '@/components/AnimatedContent'
 
 export const Route = createFileRoute('/register')({
   component: RegisterPage,
@@ -64,7 +73,7 @@ function RegisterPage() {
   const [step, setStep] = useState<Step>('teamInfo')
   const [teamInfo, setTeamInfo] = useState<TeamInfoData | null>(null)
   const [teamLead, setTeamLead] = useState<TeamLeadData | null>(null)
-  const [members, setMembers] = useState<MemberData[]>([])
+  const [members, setMembers] = useState<Array<MemberData>>([])
   const [consent, setConsent] = useState<ConsentData | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -92,10 +101,10 @@ function RegisterPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-aiih-secondary mx-auto"></div>
+          <p className="mt-4 text-slate-400">Loading...</p>
         </div>
       </div>
     )
@@ -103,20 +112,25 @@ function RegisterPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">
-              Register for KU MedAI Challenge
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
+        <AnimatedContent
+          direction="vertical"
+          distance={30}
+          duration={0.5}
+          className="w-full max-w-md"
+        >
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Join the Challenge
             </h1>
-            <p className="text-muted-foreground mt-2">
-              Sign in with your Google account to continue
+            <p className="text-aiih-secondary text-lg">
+              Sign in to register your team
             </p>
           </div>
-          <div className="rounded-lg border p-6 bg-card">
+          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-8 shadow-2xl">
             <AuthButton />
           </div>
-        </div>
+        </AnimatedContent>
       </div>
     )
   }
@@ -131,7 +145,7 @@ function RegisterPage() {
     setStep('teamMembers')
   }
 
-  const handleTeamMembersNext = (data: MemberData[]) => {
+  const handleTeamMembersNext = (data: Array<MemberData>) => {
     setMembers(data)
     setStep('consent')
   }
@@ -139,6 +153,35 @@ function RegisterPage() {
   const handleConsentNext = (data: ConsentData) => {
     setConsent(data)
     setStep('summary')
+  }
+
+  const isStepFilled = (stepKey: Step): boolean => {
+    switch (stepKey) {
+      case 'teamInfo':
+        return !!teamInfo
+      case 'teamLead':
+        return !!teamLead
+      case 'teamMembers':
+        return members.length >= 2
+      case 'consent':
+        return !!consent
+      case 'summary':
+        return !!teamInfo && !!teamLead && !!consent && members.length >= 2
+      default:
+        return false
+    }
+  }
+
+  const handleStepClick = (targetStep: Step, targetIndex: number) => {
+    if (targetIndex <= currentStepIndex) {
+      setStep(targetStep)
+    } else if (isStepFilled(targetStep)) {
+      setStep(targetStep)
+    }
+  }
+
+  const isStepClickable = (stepKey: Step, index: number): boolean => {
+    return index <= currentStepIndex || isStepFilled(stepKey)
   }
 
   const handleSubmit = async () => {
@@ -182,59 +225,117 @@ function RegisterPage() {
     }
   }
 
-  const steps: { key: Step; label: string }[] = [
-    { key: 'teamInfo', label: 'Team' },
-    { key: 'teamLead', label: 'Lead' },
-    { key: 'teamMembers', label: 'Members' },
-    { key: 'consent', label: 'Consent' },
-    { key: 'summary', label: 'Review' },
+  const steps: Array<{ key: Step; label: string; icon: React.ReactNode }> = [
+    {
+      key: 'teamInfo',
+      label: 'Team Info',
+      icon: <Users className="w-4 h-4" />,
+    },
+    {
+      key: 'teamLead',
+      label: 'Team Lead',
+      icon: <UserCog className="w-4 h-4" />,
+    },
+    {
+      key: 'teamMembers',
+      label: 'Members',
+      icon: <Users className="w-4 h-4" />,
+    },
+    {
+      key: 'consent',
+      label: 'Consent',
+      icon: <ShieldCheck className="w-4 h-4" />,
+    },
+    {
+      key: 'summary',
+      label: 'Review',
+      icon: <ClipboardCheck className="w-4 h-4" />,
+    },
   ]
 
   const currentStepIndex = steps.findIndex((s) => s.key === step)
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
       <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-center">Register Your Team</h1>
-          <p className="text-muted-foreground text-center">
+        <AnimatedContent
+          direction="vertical"
+          distance={20}
+          duration={0.5}
+          className="mb-8 text-center"
+        >
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Register Your Team
+          </h1>
+          <p className="text-aiih-secondary text-lg">
             KU MedAI Innovation Challenge 2026
           </p>
+        </AnimatedContent>
+
+        <div className="mb-8 min-h-[110px]">
+          <div className="relative h-14">
+            <div className="absolute top-5 left-[30px] right-0 h-0.5 bg-slate-700" />
+            <div
+              className="absolute top-5 left-[30px] h-0.5 bg-aiih-secondary transition-all duration-500 ease-out"
+              style={{
+                width: `calc(${(currentStepIndex / (steps.length - 1)) * 100}% - 30px)`,
+              }}
+            />
+            <div className="relative flex justify-between">
+              {steps.map((s, index) => {
+                const isCompleted = index < currentStepIndex
+                const isCurrent = index === currentStepIndex
+                const isFilled = isStepFilled(s.key)
+                const isClickable = isStepClickable(s.key, index)
+                return (
+                  <div key={s.key} className="flex flex-col items-center">
+                    <div
+                      onClick={() =>
+                        isClickable && handleStepClick(s.key, index)
+                      }
+                      className={cn(
+                        'w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300',
+                        isCompleted || isCurrent || isFilled
+                          ? 'bg-aiih-secondary text-aiih-primary'
+                          : 'bg-slate-800 text-slate-500 border border-slate-700',
+                        isCurrent && 'ring-4 ring-aiih-secondary/20 scale-110',
+                        isClickable &&
+                          index !== currentStepIndex &&
+                          'cursor-pointer hover:scale-105',
+                        isClickable &&
+                          index === currentStepIndex &&
+                          'cursor-default',
+                      )}
+                    >
+                      {isCompleted ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        s.icon
+                      )}
+                    </div>
+                    <span
+                      className={cn(
+                        'mt-2 text-xs font-medium transition-colors duration-300',
+                        isCompleted || isCurrent || isFilled
+                          ? 'text-white'
+                          : 'text-slate-500',
+                      )}
+                    >
+                      {s.label}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
 
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((s, index) => (
-              <div key={s.key} className="flex items-center">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    index <= currentStepIndex
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
-                  {index + 1}
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`w-16 h-1 mx-2 ${
-                      index < currentStepIndex ? 'bg-primary' : 'bg-muted'
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-            <span>Team Info</span>
-            <span>Lead</span>
-            <span>Members</span>
-            <span>Consent</span>
-            <span>Review</span>
-          </div>
-        </div>
-
-        <div className="rounded-lg border bg-card p-6">
+        <AnimatedContent
+          direction="vertical"
+          distance={30}
+          duration={0.4}
+          className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-6 shadow-2xl"
+        >
           {step === 'teamInfo' && (
             <StepTeamInfo
               onNext={handleTeamInfoNext}
@@ -245,6 +346,7 @@ function RegisterPage() {
             <StepTeamLead
               user={session.user}
               onNext={handleTeamLeadNext}
+              onBack={() => setStep('teamInfo')}
               initialData={
                 teamLead
                   ? {
@@ -285,11 +387,24 @@ function RegisterPage() {
           )}
 
           {error && (
-            <div className="mt-4 p-3 rounded-md bg-red-50 text-red-600 text-sm">
+            <div className="mt-4 p-3 rounded-md bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+              <svg
+                className="w-4 h-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
               {error}
             </div>
           )}
-        </div>
+        </AnimatedContent>
       </div>
     </div>
   )
