@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { Leaf, Microscope } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { RegistrationContinueButton } from './RegistrationContinueButton'
+import { cn } from '@/lib/utils'
 
 interface StepTeamInfoProps {
   onNext: (data: {
@@ -57,7 +57,29 @@ export function StepTeamInfo({ onNext, initialData }: StepTeamInfoProps) {
           id="teamName"
           type="text"
           value={teamName}
-          onChange={(e) => setTeamName(e.target.value)}
+          onChange={(e) => {
+            setTeamName(e.target.value)
+            if (e.target.value.trim() && e.target.value.length >= 3) {
+              setErrors((prev) => {
+                const next = { ...prev }
+                delete next.teamName
+                return next
+              })
+            }
+          }}
+          onBlur={() => {
+            if (!teamName.trim()) {
+              setErrors((prev) => ({
+                ...prev,
+                teamName: 'Team name is required',
+              }))
+            } else if (teamName.length < 3) {
+              setErrors((prev) => ({
+                ...prev,
+                teamName: 'Team name must be at least 3 characters',
+              }))
+            }
+          }}
           placeholder="Enter your creative team name"
           className={cn(
             'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -94,7 +116,14 @@ export function StepTeamInfo({ onNext, initialData }: StepTeamInfoProps) {
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <div
-            onClick={() => setTrack('agro_medicine')}
+            onClick={() => {
+              setTrack('agro_medicine')
+              setErrors((prev) => {
+                const next = { ...prev }
+                delete next.track
+                return next
+              })
+            }}
             className={cn(
               'cursor-pointer rounded-xl border-2 p-5 transition-all duration-300',
               'hover:scale-[1.02] hover:shadow-lg',
@@ -121,7 +150,14 @@ export function StepTeamInfo({ onNext, initialData }: StepTeamInfoProps) {
             </div>
           </div>
           <div
-            onClick={() => setTrack('bioinnovation')}
+            onClick={() => {
+              setTrack('bioinnovation')
+              setErrors((prev) => {
+                const next = { ...prev }
+                delete next.track
+                return next
+              })
+            }}
             className={cn(
               'cursor-pointer rounded-xl border-2 p-5 transition-all duration-300',
               'hover:scale-[1.02] hover:shadow-lg',

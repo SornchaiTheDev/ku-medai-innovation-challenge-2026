@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { GraduationCap, Phone, Plus, School, Trash2, User } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { RegistrationBackButton } from './RegistrationBackButton'
 import { RegistrationContinueButton } from './RegistrationContinueButton'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
 interface TeamMemberData {
   id: string
@@ -87,6 +87,24 @@ export function StepTeamMembers({
           : m,
       ),
     )
+    if (field === 'name' && value.trim()) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].name
+        }
+        return next
+      })
+    }
+    if (field === 'phone' && value.trim() && validateThaiPhone(value)) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].phone
+        }
+        return next
+      })
+    }
   }
 
   const updateMemberEducation = (
@@ -98,11 +116,94 @@ export function StepTeamMembers({
         m.id === id ? { ...m, educationDetails: details } : m,
       ),
     )
+    if (details.schoolName?.trim()) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].schoolName
+        }
+        return next
+      })
+    }
+    if (details.grade) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].grade
+        }
+        return next
+      })
+    }
+    if (details.university?.trim()) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].university
+        }
+        return next
+      })
+    }
+    if (details.faculty?.trim()) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].faculty
+        }
+        return next
+      })
+    }
+    if (details.studentId?.trim()) {
+      setErrors((prev) => {
+        const next = { ...prev }
+        if (next[id]) {
+          delete next[id].studentId
+        }
+        return next
+      })
+    }
   }
 
   const validateThaiPhone = (phone: string) => {
     const cleaned = phone.replace(/\D/g, '')
-    return cleaned.length >= 9 && cleaned.length <= 10
+    if (cleaned.length !== phone.length) return false
+    return /^0[689]\d{8}$/.test(cleaned)
+  }
+
+  const validateMemberField = (id: string, field: string, value: any) => {
+    let error: string | undefined
+    switch (field) {
+      case 'name':
+        if (!value.trim()) error = 'Name is required'
+        break
+      case 'phone':
+        if (!value.trim()) {
+          error = 'Phone is required'
+        } else if (!validateThaiPhone(value)) {
+          error = 'Invalid Thai phone number'
+        }
+        break
+      case 'schoolName':
+        if (!value.trim()) error = 'School name is required'
+        break
+      case 'grade':
+        if (!value) error = 'Grade is required'
+        break
+      case 'university':
+        if (!value.trim()) error = 'University is required'
+        break
+      case 'faculty':
+        if (!value.trim()) error = 'Faculty is required'
+        break
+      case 'studentId':
+        if (!value.trim()) error = 'Student ID is required'
+        break
+    }
+    if (error) {
+      setErrors((prev) => ({
+        ...prev,
+        [id]: { ...prev[id], [field]: error },
+      }))
+    }
   }
 
   const validateMembers = () => {
@@ -236,6 +337,9 @@ export function StepTeamMembers({
                   onChange={(e) =>
                     updateMember(member.id, 'name', e.target.value)
                   }
+                  onBlur={() =>
+                    validateMemberField(member.id, 'name', member.name)
+                  }
                   placeholder="Thai and English name"
                   className={cn(
                     'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -275,6 +379,9 @@ export function StepTeamMembers({
                   value={member.phone}
                   onChange={(e) =>
                     updateMember(member.id, 'phone', e.target.value)
+                  }
+                  onBlur={() =>
+                    validateMemberField(member.id, 'phone', member.phone)
                   }
                   placeholder="0xx-xxx-xxxx"
                   className={cn(
@@ -388,6 +495,13 @@ export function StepTeamMembers({
                         schoolName: e.target.value,
                       })
                     }
+                    onBlur={() =>
+                      validateMemberField(
+                        member.id,
+                        'schoolName',
+                        member.educationDetails.schoolName,
+                      )
+                    }
                     placeholder="School name"
                     className={cn(
                       'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -428,6 +542,13 @@ export function StepTeamMembers({
                         ...member.educationDetails,
                         grade: e.target.value,
                       })
+                    }
+                    onBlur={() =>
+                      validateMemberField(
+                        member.id,
+                        'grade',
+                        member.educationDetails.grade,
+                      )
                     }
                     className={cn(
                       'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white',
@@ -486,6 +607,13 @@ export function StepTeamMembers({
                         university: e.target.value,
                       })
                     }
+                    onBlur={() =>
+                      validateMemberField(
+                        member.id,
+                        'university',
+                        member.educationDetails.university,
+                      )
+                    }
                     placeholder="University"
                     className={cn(
                       'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -528,6 +656,13 @@ export function StepTeamMembers({
                         faculty: e.target.value,
                       })
                     }
+                    onBlur={() =>
+                      validateMemberField(
+                        member.id,
+                        'faculty',
+                        member.educationDetails.faculty,
+                      )
+                    }
                     placeholder="Faculty"
                     className={cn(
                       'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -569,6 +704,13 @@ export function StepTeamMembers({
                         ...member.educationDetails,
                         studentId: e.target.value,
                       })
+                    }
+                    onBlur={() =>
+                      validateMemberField(
+                        member.id,
+                        'studentId',
+                        member.educationDetails.studentId,
+                      )
                     }
                     placeholder="Student ID"
                     className={cn(

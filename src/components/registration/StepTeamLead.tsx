@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { GraduationCap, Phone, School } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { RegistrationBackButton } from './RegistrationBackButton'
 import { RegistrationContinueButton } from './RegistrationContinueButton'
+import { cn } from '@/lib/utils'
 
 interface EducationDetails {
   type: 'high_school' | 'university'
@@ -43,11 +43,12 @@ export function StepTeamLead({
   const [educationDetails, setEducationDetails] = useState<EducationDetails>(
     initialData?.educationDetails || { type: 'university' },
   )
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({})
 
   const validateThaiPhone = (phone: string) => {
     const cleaned = phone.replace(/\D/g, '')
-    return cleaned.length >= 9 && cleaned.length <= 10
+    if (cleaned.length !== phone.length) return false
+    return /^0[689]\d{8}$/.test(cleaned)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -118,7 +119,29 @@ export function StepTeamLead({
           id="phone"
           type="tel"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => {
+            setPhone(e.target.value)
+            if (e.target.value.trim() && validateThaiPhone(e.target.value)) {
+              setErrors((prev) => {
+                const next = { ...prev }
+                delete next.phone
+                return next
+              })
+            }
+          }}
+          onBlur={() => {
+            if (phone.trim() && !validateThaiPhone(phone)) {
+              setErrors((prev) => ({
+                ...prev,
+                phone: 'Please enter a valid Thai phone number',
+              }))
+            } else if (!phone.trim()) {
+              setErrors((prev) => ({
+                ...prev,
+                phone: 'Phone number is required',
+              }))
+            }
+          }}
           placeholder="0xx-xxx-xxxx"
           className={cn(
             'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -230,12 +253,27 @@ export function StepTeamLead({
               id="schoolName"
               type="text"
               value={educationDetails.schoolName || ''}
-              onChange={(e) =>
+              onChange={(e) => {
                 setEducationDetails({
                   ...educationDetails,
                   schoolName: e.target.value,
                 })
-              }
+                if (e.target.value.trim()) {
+                  setErrors((prev) => {
+                    const next = { ...prev }
+                    delete next.schoolName
+                    return next
+                  })
+                }
+              }}
+              onBlur={() => {
+                if (!educationDetails.schoolName?.trim()) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    schoolName: 'School name is required',
+                  }))
+                }
+              }}
               placeholder="Enter your school name"
               className={cn(
                 'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -275,12 +313,27 @@ export function StepTeamLead({
             <select
               id="grade"
               value={educationDetails.grade || ''}
-              onChange={(e) =>
+              onChange={(e) => {
                 setEducationDetails({
                   ...educationDetails,
                   grade: e.target.value,
                 })
-              }
+                if (e.target.value) {
+                  setErrors((prev) => {
+                    const next = { ...prev }
+                    delete next.grade
+                    return next
+                  })
+                }
+              }}
+              onBlur={() => {
+                if (!educationDetails.grade) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    grade: 'Grade is required',
+                  }))
+                }
+              }}
               className={cn(
                 'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aiih-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900',
@@ -336,12 +389,27 @@ export function StepTeamLead({
               id="university"
               type="text"
               value={educationDetails.university || ''}
-              onChange={(e) =>
+              onChange={(e) => {
                 setEducationDetails({
                   ...educationDetails,
                   university: e.target.value,
                 })
-              }
+                if (e.target.value.trim()) {
+                  setErrors((prev) => {
+                    const next = { ...prev }
+                    delete next.university
+                    return next
+                  })
+                }
+              }}
+              onBlur={() => {
+                if (!educationDetails.university?.trim()) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    university: 'University name is required',
+                  }))
+                }
+              }}
               placeholder="Enter your university name"
               className={cn(
                 'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -382,12 +450,27 @@ export function StepTeamLead({
               id="faculty"
               type="text"
               value={educationDetails.faculty || ''}
-              onChange={(e) =>
+              onChange={(e) => {
                 setEducationDetails({
                   ...educationDetails,
                   faculty: e.target.value,
                 })
-              }
+                if (e.target.value.trim()) {
+                  setErrors((prev) => {
+                    const next = { ...prev }
+                    delete next.faculty
+                    return next
+                  })
+                }
+              }}
+              onBlur={() => {
+                if (!educationDetails.faculty?.trim()) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    faculty: 'Faculty is required',
+                  }))
+                }
+              }}
               placeholder="Enter your faculty"
               className={cn(
                 'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',
@@ -428,12 +511,27 @@ export function StepTeamLead({
               id="studentId"
               type="text"
               value={educationDetails.studentId || ''}
-              onChange={(e) =>
+              onChange={(e) => {
                 setEducationDetails({
                   ...educationDetails,
                   studentId: e.target.value,
                 })
-              }
+                if (e.target.value.trim()) {
+                  setErrors((prev) => {
+                    const next = { ...prev }
+                    delete next.studentId
+                    return next
+                  })
+                }
+              }}
+              onBlur={() => {
+                if (!educationDetails.studentId?.trim()) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    studentId: 'Student ID is required',
+                  }))
+                }
+              }}
               placeholder="Enter your student ID"
               className={cn(
                 'flex h-11 w-full rounded-lg border bg-slate-900/50 px-4 py-2 text-sm text-white placeholder:text-slate-500',

@@ -79,9 +79,12 @@ export function StepConsent({ onNext, onBack }: StepConsentProps) {
                   <input
                     type="checkbox"
                     checked={isChecked}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setConsent({ ...consent, [item.key]: e.target.checked })
-                    }
+                      if (consent.rules && consent.photo && consent.data) {
+                        setError('')
+                      }
+                    }}
                     className="sr-only"
                   />
                   <div
