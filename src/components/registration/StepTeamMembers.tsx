@@ -20,7 +20,6 @@ interface TeamMemberData {
     grade?: string
     university?: string
     faculty?: string
-    studentId?: string
   }
 }
 
@@ -34,7 +33,6 @@ export interface MemberOutput {
     grade?: string
     university?: string
     faculty?: string
-    studentId?: string
   }
 }
 
@@ -154,15 +152,6 @@ export function StepTeamMembers({
         return next
       })
     }
-    if (details.studentId?.trim()) {
-      setErrors((prev) => {
-        const next = { ...prev }
-        if (next[id]) {
-          delete next[id].studentId
-        }
-        return next
-      })
-    }
   }
 
   const validateThaiPhone = (phone: string) => {
@@ -195,9 +184,6 @@ export function StepTeamMembers({
         break
       case 'faculty':
         if (!value.trim()) error = 'Faculty is required'
-        break
-      case 'studentId':
-        if (!value.trim()) error = 'Student ID is required'
         break
     }
     if (error) {
@@ -237,9 +223,6 @@ export function StepTeamMembers({
         }
         if (!member.educationDetails.faculty?.trim()) {
           memberErrors.faculty = 'Faculty is required'
-        }
-        if (!member.educationDetails.studentId?.trim()) {
-          memberErrors.studentId = 'Student ID is required'
         }
       }
 
@@ -521,26 +504,6 @@ export function StepTeamMembers({
                   }
                   placeholder="Faculty"
                   error={errors[member.id]?.faculty}
-                />
-                <InputField
-                  label="Student ID"
-                  required
-                  value={member.educationDetails.studentId || ''}
-                  onChange={(e) =>
-                    updateMemberEducation(member.id, {
-                      ...member.educationDetails,
-                      studentId: e.target.value,
-                    })
-                  }
-                  onBlur={() =>
-                    validateMemberField(
-                      member.id,
-                      'studentId',
-                      member.educationDetails.studentId,
-                    )
-                  }
-                  placeholder="Student ID"
-                  error={errors[member.id]?.studentId}
                 />
               </div>
             )}

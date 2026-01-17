@@ -23,7 +23,6 @@ interface SummaryMember {
     grade?: string
     university?: string
     faculty?: string
-    studentId?: string
   }
 }
 
@@ -38,7 +37,6 @@ interface RegistrationSummaryProps {
     grade?: string
     university?: string
     faculty?: string
-    studentId?: string
   }
   members: Array<SummaryMember>
   consent: { rules: boolean; photo: boolean; data: boolean }

@@ -14,7 +14,6 @@ interface EducationDetails {
   grade?: string
   university?: string
   faculty?: string
-  studentId?: string
 }
 
 interface StepTeamLeadProps {
@@ -76,9 +75,6 @@ export function StepTeamLead({
       }
       if (!educationDetails.faculty?.trim()) {
         newErrors.faculty = 'Faculty is required'
-      }
-      if (!educationDetails.studentId?.trim()) {
-        newErrors.studentId = 'Student ID is required'
       }
     }
 
@@ -343,35 +339,6 @@ export function StepTeamLead({
             }}
             placeholder="Enter your faculty"
             error={errors.faculty}
-          />
-          <InputField
-            label="Student ID"
-            htmlFor="studentId"
-            required
-            value={educationDetails.studentId || ''}
-            onChange={(e) => {
-              setEducationDetails({
-                ...educationDetails,
-                studentId: e.target.value,
-              })
-              if (e.target.value.trim()) {
-                setErrors((prev) => {
-                  const next = { ...prev }
-                  delete next.studentId
-                  return next
-                })
-              }
-            }}
-            onBlur={() => {
-              if (!educationDetails.studentId?.trim()) {
-                setErrors((prev) => ({
-                  ...prev,
-                  studentId: 'Student ID is required',
-                }))
-              }
-            }}
-            placeholder="Enter your student ID"
-            error={errors.studentId}
           />
         </div>
       )}
