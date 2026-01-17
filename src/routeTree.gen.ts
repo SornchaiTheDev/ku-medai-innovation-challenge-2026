@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChallengeIndexRouteImport } from './routes/challenge/index'
 import { Route as ApiTeamGetRouteImport } from './routes/api/team/get'
 import { Route as ApiTeamCreateRouteImport } from './routes/api/team/create'
+import { Route as ApiTeamCheckRegistrationRouteImport } from './routes/api/team/check-registration'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -47,6 +48,12 @@ const ApiTeamCreateRoute = ApiTeamCreateRouteImport.update({
   path: '/api/team/create',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTeamCheckRegistrationRoute =
+  ApiTeamCheckRegistrationRouteImport.update({
+    id: '/api/team/check-registration',
+    path: '/api/team/check-registration',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -59,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/challenge': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
   '/api/team/create': typeof ApiTeamCreateRoute
   '/api/team/get': typeof ApiTeamGetRoute
 }
@@ -68,6 +76,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/challenge': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
   '/api/team/create': typeof ApiTeamCreateRoute
   '/api/team/get': typeof ApiTeamGetRoute
 }
@@ -78,6 +87,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/challenge/': typeof ChallengeIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/team/check-registration': typeof ApiTeamCheckRegistrationRoute
   '/api/team/create': typeof ApiTeamCreateRoute
   '/api/team/get': typeof ApiTeamGetRoute
 }
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/challenge'
     | '/api/auth/$'
+    | '/api/team/check-registration'
     | '/api/team/create'
     | '/api/team/get'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +109,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/challenge'
     | '/api/auth/$'
+    | '/api/team/check-registration'
     | '/api/team/create'
     | '/api/team/get'
   id:
@@ -107,6 +119,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/challenge/'
     | '/api/auth/$'
+    | '/api/team/check-registration'
     | '/api/team/create'
     | '/api/team/get'
   fileRoutesById: FileRoutesById
@@ -117,6 +130,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ChallengeIndexRoute: typeof ChallengeIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiTeamCheckRegistrationRoute: typeof ApiTeamCheckRegistrationRoute
   ApiTeamCreateRoute: typeof ApiTeamCreateRoute
   ApiTeamGetRoute: typeof ApiTeamGetRoute
 }
@@ -165,6 +179,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTeamCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/team/check-registration': {
+      id: '/api/team/check-registration'
+      path: '/api/team/check-registration'
+      fullPath: '/api/team/check-registration'
+      preLoaderRoute: typeof ApiTeamCheckRegistrationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -181,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ChallengeIndexRoute: ChallengeIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiTeamCheckRegistrationRoute: ApiTeamCheckRegistrationRoute,
   ApiTeamCreateRoute: ApiTeamCreateRoute,
   ApiTeamGetRoute: ApiTeamGetRoute,
 }

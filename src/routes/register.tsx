@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { createAuthClient } from 'better-auth/client'
 import { useEffect, useState } from 'react'
 import {
@@ -70,6 +70,7 @@ function RegisterPage() {
     null,
   )
   const [isLoading, setIsLoading] = useState(true)
+  const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false)
   const [step, setStep] = useState<Step>('teamInfo')
   const [teamInfo, setTeamInfo] = useState<TeamInfoData | null>(null)
   const [teamLead, setTeamLead] = useState<TeamLeadData | null>(null)
@@ -83,6 +84,14 @@ function RegisterPage() {
       try {
         const { data } = await authClient.getSession()
         setSession(data)
+
+        if (data?.user) {
+          const response = await fetch('/api/team/check-registration')
+          const result = await response.json()
+          if (result.isRegistered) {
+            setIsAlreadyRegistered(true)
+          }
+        }
       } catch {
         setSession(null)
       } finally {
@@ -106,6 +115,39 @@ function RegisterPage() {
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-aiih-secondary mx-auto"></div>
           <p className="mt-4 text-slate-400">Loading...</p>
         </div>
+      </div>
+    )
+  }
+
+  if (isAlreadyRegistered) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800">
+        <AnimatedContent
+          direction="vertical"
+          distance={30}
+          duration={0.5}
+          className="w-full max-w-md text-center"
+        >
+          <div className="mb-8">
+            <div className="w-20 h-20 bg-aiih-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="w-10 h-10 text-aiih-secondary" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              You're Already Registered!
+            </h1>
+            <p className="text-slate-400 text-lg">
+              Your team is all set for the KU MedAI Innovation Challenge 2026
+            </p>
+          </div>
+          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm p-8 shadow-2xl">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center justify-center w-full py-3 px-4 bg-aiih-secondary hover:bg-aiih-secondary/90 text-aiih-primary font-semibold rounded-lg transition-colors"
+            >
+              Go to Dashboard
+            </Link>
+          </div>
+        </AnimatedContent>
       </div>
     )
   }
