@@ -56,17 +56,6 @@ export default function Footer() {
 
         <FadeContent duration={800} delay={500}>
           <div className="border-t border-slate-800 pt-8 text-center">
-            <StarBorder
-              as="button"
-              color="#50d8af"
-              speed="4s"
-              thickness={2}
-              variant="emerald"
-              className="font-semibold"
-              onClick={() => alert('Registration coming soon!')}
-            >
-              Register Now
-            </StarBorder>
             <p className="text-slate-500 text-sm mt-4">
               © 2026 {challengeConstants.name}. All rights reserved.
             </p>

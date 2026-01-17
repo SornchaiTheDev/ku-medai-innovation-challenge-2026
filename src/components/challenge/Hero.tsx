@@ -6,6 +6,7 @@ import BlurText from '@/components/BlurText'
 import FadeContent from '@/components/FadeContent'
 import StarBorder from '@/components/StarBorder'
 import TextType from '@/components/TextType'
+import { cn } from '@/lib/utils'
 
 interface TimeLeft {
   days: number
@@ -127,22 +128,6 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-        <FadeContent duration={800} delay={300}>
-          <div className="hidden md:inline-flex flex-col md:flex-row items-center gap-2 md:gap-4 bg-white/10 backdrop-blur-sm px-4 py-3 rounded-full mb-10 border border-white/20">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-emerald-400" />
-              <span className="text-sm text-white/90">
-                📅 {challengeConstants.dates.registrationOpen}
-              </span>
-            </div>
-            <span className="hidden md:block text-white/40">|</span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-white/90">
-                🏆 {challengeConstants.dates.finalPitch}
-              </span>
-            </div>
-          </div>
-        </FadeContent>
 
         <div className="text-3xl md:text-4xl xl:text-6xl font-bold text-white mb-8 md:mb-10 tracking-tight space-y-4">
           <TextType
@@ -185,7 +170,12 @@ export default function Hero() {
                 speed="4s"
                 thickness={2}
                 variant="emerald"
-                className="font-semibold text-lg"
+                className={cn(
+                  'font-semibold text-lg',
+                  registrationStatus.isAvailable
+                    ? 'cursor-pointer'
+                    : 'cursor-not-allowed',
+                )}
                 onClick={handleJoinChallenge}
                 disabled={
                   registrationStatus.isLoading ||
