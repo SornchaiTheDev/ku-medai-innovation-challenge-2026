@@ -8,4 +8,4 @@ dist
 coverage
 .vscode
 .env*
-!env.example
+!.env.example
