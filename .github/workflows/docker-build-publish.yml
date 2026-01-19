@@ -29,7 +29,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/ku-medai-innovation-challenge
+          images: ${{ secrets.DOCKER_USERNAME }}/aiih-web
           tags: |
             type=sha
             type=ref,event=branch
